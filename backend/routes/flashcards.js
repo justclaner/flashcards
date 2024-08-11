@@ -103,9 +103,15 @@ router.put('/editCard/:cardId', async (req,res) => {
 router.delete('/deleteSet/:setId', async (req,res) => {
     try {
         const {setId} = req.params;
-        const result = await Set.findByIdAndDelete(setId);
-        if (!result) {return res.status(404).json({success:false, message:"Set is not found."});}
+
+        const deleteSet = await Set.findByIdAndDelete(setId);
+        if (!deleteSet) {return res.status(404).json({success:false, message:"Set is not found."});}
+
+        const deleteCards = await Card.deleteMany({setId:setId});
+        if (!deleteCards) {return res.status(404).json({success:false,message:"Cards not found."});}
+
         return res.status(200).json({success:true,message:"Set successfully deleted.",result:result});
+        
     } catch(e) {
         console.error(e);
         return resizeBy.status(500).json({success:false,message:e.message});
@@ -118,6 +124,17 @@ router.delete('/deleteCard/:cardId', async (req,res) => {
         const result = await Card.findByIdAndDelete(cardId);
         if (!result) {return res.status(404).json({success:false, message:"Set is not found."});}
         return res.status(200).json({success:true,message:"Card successfully deleted.",result:result});
+    } catch(e) {
+        console.error(e);
+        return resizeBy.status(500).json({success:false,message:e.message});
+    }
+})
+
+router.delete('/deleteAll',async (req,res) => {
+    try {
+        const deleteSets = await Set.deleteMany({});
+        const deleteCards = await Card.deleteMany({});
+        return res.status(200).json("Deleted everything successfully.")
     } catch(e) {
         console.error(e);
         return resizeBy.status(500).json({success:false,message:e.message});
