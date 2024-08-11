@@ -110,8 +110,8 @@ router.delete('/deleteSet/:setId', async (req,res) => {
         const deleteCards = await Card.deleteMany({setId:setId});
         if (!deleteCards) {return res.status(404).json({success:false,message:"Cards not found."});}
 
-        return res.status(200).json({success:true,message:"Set successfully deleted.",result:result});
-        
+        return res.status(200).json({success:true,message:"Set successfully deleted.",set:deleteSet,cards:deleteCards});
+
     } catch(e) {
         console.error(e);
         return resizeBy.status(500).json({success:false,message:e.message});
