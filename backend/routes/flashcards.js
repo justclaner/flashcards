@@ -29,7 +29,7 @@ router.get('/:setId?/:cardId?',async (req,res)=>{
     }
 })
 
-router.post('/createSet',async (req,res)=>{
+router.post('/createSet', async (req,res)=>{
     try {
         const {title, description, color} = req.body;
         if (!title) {return res.status(400).json({success:false,message:"Title not provided."})}
@@ -38,14 +38,14 @@ router.post('/createSet',async (req,res)=>{
         if (color) {set.color = color;}
         const result = await Set.create(set);
         if (!result) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."})}
-        return res.status(200).json(result);
+        return res.status(200).json({success:true,message:"Set successfully uploaded to MongoDB",result:result});
     } catch(e) {
         console.error(e);
         return res.status(500).json({success:false,message:e.message});
     }
 })
 
-router.post('/createCard',async (req,res)=>{
+router.post('/createCard', async (req,res)=>{
     try {
         const {word, definition, color, setId} = req.body;
         if (!word || !definition) {return res.status(400).json({success:false,message:"Word and/or definition not provided."})}
@@ -63,10 +63,64 @@ router.post('/createCard',async (req,res)=>{
         if (color) {card.color = color;}
         const result = await Card.create(card);
         if (!result) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."})}
-        return res.status(200).json(result);
+        return res.status(200).json({success:true,message:"Card successfully uploaded to MongoDB",result:result});
     } catch(e) {
         console.error(e);
         return res.status(500).json({success:false,message:e.message});
+    }
+})
+
+router.put('/editSet/:setId', async (req,res) => {
+    try {
+        const {setId} = req.params;
+        const {title, description, color} = req.body;
+        if (!title) {return res.status(400).json({success:false,message:"Title not provided."})}
+
+        const result = await Set.findByIdAndUpdate(setId,req.body);
+        if (!result) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."})}
+        return res.status(200).json({success:true,message:"Set successfully updated",previous:result});
+    } catch(e) {
+        console.error(e);
+        return res.status(500).json({success:false,message:e.message});
+    }
+})
+
+router.put('/editCard/:cardId', async (req,res) => {
+    try {
+        const {cardId} = req.params;
+        const {word, definition, color, setId} = req.body;
+        if (!word || !definition) {return res.status(400).json({success:false,message:"Word and/or definition not provided."})}
+
+        const result = await Card.findByIdAndUpdate(cardId,req.body);
+        if (!result) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."})}
+        return res.status(200).json({success:true,message:"Card successfully updated",previous:result});
+    } catch(e) {
+        console.error(e);
+        return res.status(500).json({success:false,message:e.message});
+    }
+})
+
+router.delete('/deleteSet/:setId', async (req,res) => {
+    try {
+        const {setId} = req.params;
+        const result = await Set.findByIdAndDelete(setId);
+        if (!result) {return res.status(404).json({success:false, message:"Set is not found."});}
+        return res.status(200).json({success:true,message:"Set successfully deleted.",result:result});
+    } catch(e) {
+        console.error(e);
+        return resizeBy.status(500).json({success:false,message:e.message});
+    }
+})
+
+router.delete('/deleteCard/:cardId', async (req,res) => {
+    try {
+        const {cardId} = req.params;
+        const result = await Card.findByIdAndDelete(cardId);
+        if (!result) {return res.status(404).json({success:false, message:"Set is not found."});}
+        return res.status(200).json({success:true,message:"Card successfully deleted.",result:result});
+    } catch(e) {
+        console.error(e);
+        return resizeBy.status(500).json({success:false,message:e.message});
     }
 })
 
