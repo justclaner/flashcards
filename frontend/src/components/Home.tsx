@@ -37,7 +37,7 @@ useEffect(()=>{
                 </div>
             )}
         </div>
-        <button className="text-3xl border-2 border-black my-2 px-2 py-3 rounded-lg hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100 w-[90%]">Create Set</button>
+        <Link to='/createSet'><button className="text-3xl border-2 border-black my-2 px-2 py-3 rounded-lg hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100 w-[90%]">Create Set</button></Link>
     </div>
   )
 }
