@@ -14,17 +14,44 @@ const CreateSet = () => {
   const [loading,setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const [title,setTitle] = useState("");
+  const [description,setDescription] = useState("");
+  const [color, setColor] = useState(""); //add default color here
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [moveIds,setMoveIds] = useState([-1,-1]);
+
 useEffect(()=>{
-  console.log(cardElements);
+ // console.log(cardElements);
 },[cardElements])
 
 useEffect(()=>{
-  console.log("Words: [" + wordList + "]");
+ // console.log("Words: [" + wordList + "]");
 },[wordList])
 
 useEffect(()=>{
-  console.log("Definitions: [" + definitionList + "]");
+ // console.log("Definitions: [" + definitionList + "]");
 },[definitionList])
+
+useEffect(()=>{
+  if (!isDragging && !moveIds.includes(-1)) {
+    console.log(moveIds);
+    setCardElements(moveElements(cardElements));
+    setWordList(moveElements(wordList));
+    setDefinitionList(moveElements(definitionList));
+  }
+},[moveIds])
+
+const moveElements = (arr: any[]): any[] => {
+  const elem = arr[moveIds[0]];
+  const newList1 = arr.filter((obj:any,i:number)=>i != moveIds[0]);
+  const newList2 = [
+    ...newList1.slice(0,moveIds[1]),
+    elem,
+    ...newList1.slice(moveIds[1])
+  ];
+  return newList2;
+}
 
 const postSet = async () => {
   try {
@@ -44,19 +71,26 @@ const postSet = async () => {
 
       <div className="p-4 w-[50%] mx-auto">
         <label className="text-3xl">Title:</label>
-        <input type="text" className="text-3xl w-full border border-black p-2" />
+        <input type="text" className="text-3xl w-full border border-black p-2" onChange={(e)=>{setTitle(e.target.value)}}/>
       </div>
       <div className="p-4 w-[50%] mx-auto">
         <label className="text-3xl">Description:</label>
-        <input type="text" className="text-3xl w-full border border-black p-2" />
+        <input type="text" className="text-3xl w-full border border-black p-2" onChange={(e)=>{setDescription(e.target.value)}}/>
       </div>
       <div className="p-4 w-[50%] mx-auto">
         <label className="text-3xl">Color:</label>
-        <input type="color" className="w-full border border-black h-[54px] p-1" />
+        <input type="color" className="w-full border border-black h-[54px] p-1" onChange={(e)=>{setColor(e.target.value)}}/>
       </div>
 
     <div className="flex flex-col p-4 mt-[100px] w-[80%] border border-black rounded-lg mx-auto min-w-[350px]">
-    <DataContext.Provider value={{wordList,setWordList,definitionList,setDefinitionList,cardElements,setCardElements}}>
+    <DataContext.Provider 
+    value={{
+      wordList,setWordList,
+      definitionList,setDefinitionList,
+      cardElements,setCardElements,
+      isDragging,setIsDragging,
+      moveIds,setMoveIds
+      }}>
       {cardElements}
     </DataContext.Provider>
     <button className="block border border-black rounded-lg px-2 py-1 mt-4 text-2xl mx-auto hover:bg-gray-200 active:bg-gray-100" 

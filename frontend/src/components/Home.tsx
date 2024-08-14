@@ -26,7 +26,7 @@ useEffect(()=>{
         <h1 className="text-3xl mb-3">Flashcards App</h1>
         <div className="flex flex-wrap justify-evenly p-4 mx-auto my-2 border border-black w-[90%] rounded-lg">
             {loading ? <Loading /> : sets.map(set=>
-                <div className="p-4 rounded-lg border border-black min-w-[300px] max-w-[24%] m-2" key={set._id} style={{backgroundColor:"set.color"}}>
+                <div className="p-4 rounded-lg border border-black min-w-[300px] max-w-[24%] m-2" key={set._id} style={{backgroundColor:`${set.color}`}}>
                     <h1 className="text-2xl">{set.title}</h1>
                     <h1 className="text-xl">{set.description}</h1>
                     <div className="p-4 flex flex-wrap justify-evenly">
