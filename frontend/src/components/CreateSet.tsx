@@ -1,5 +1,6 @@
 import {useState,useEffect, createContext} from 'react';
-
+import {useNavigate} from 'react-router-dom';
+import Loading from './Loading.tsx';
 import Card from './Card.tsx';
 import { DiVim } from 'react-icons/di';
 export const DataContext = createContext(null as any);
@@ -8,20 +9,34 @@ const CreateSet = () => {
   const [wordList,setWordList] = useState<string[]>(["","",""]);
   const [definitionList,setDefinitionList] = useState<string[]>(["","",""]);
   const [cardElements,setCardElements] = useState(new Array(defaultLength).fill(0).map((obj,i)=> 
-    <Card key={i} index={i} wordDefault={wordList[i]} definitionDefault={wordList[i]}/>
+    <Card key={i} index={i} wordDefault={wordList[i]} definitionDefault={definitionList[i]}/>
       ));
-  
+  const [loading,setLoading] = useState(false);
+  const navigate = useNavigate();
 
 useEffect(()=>{
   console.log(cardElements);
 },[cardElements])
 
 useEffect(()=>{
-  console.log("Words: " + wordList);
+  console.log("Words: [" + wordList + "]");
 },[wordList])
+
 useEffect(()=>{
-  console.log("Definition: " + definitionList);
+  console.log("Definitions: [" + definitionList + "]");
 },[definitionList])
+
+const postSet = async () => {
+  try {
+    setLoading(true);
+    
+    setLoading(false);
+    navigate('/home');
+  } catch(e) {
+    setLoading(false);
+    console.error(e);
+  }
+}
 
   return (
     <div className="p-4 pb-[200px]">
@@ -41,19 +56,21 @@ useEffect(()=>{
       </div>
 
     <div className="flex flex-col p-4 mt-[100px] w-[80%] border border-black rounded-lg mx-auto min-w-[350px]">
-    <DataContext.Provider value={{wordList,setWordList,definitionList,setDefinitionList}}>
+    <DataContext.Provider value={{wordList,setWordList,definitionList,setDefinitionList,cardElements,setCardElements}}>
       {cardElements}
     </DataContext.Provider>
-    </div>
-    <button className="block border border-black rounded-lg px-2 py-1 mt-4 text-2xl mx-auto" 
+    <button className="block border border-black rounded-lg px-2 py-1 mt-4 text-2xl mx-auto hover:bg-gray-200 active:bg-gray-100" 
     onClick={()=>{
       setWordList([...wordList,""]);
       setDefinitionList([...definitionList,""])
       const index = cardElements.length;
       setCardElements([...cardElements,
-      <Card key={index} index={index} wordDefault={wordList[index]} definitionDefault={wordList[index]}/>
+      <Card key={index} index={index} wordDefault={wordList[index]} definitionDefault={definitionList[index]}/>
     ])
     }}>Create Another Flashcard</button>
+    </div>
+    <button className="block border border-black rounded-lg px-2 py-1 mt-4 text-2xl mx-auto hover:bg-gray-200 active:bg-gray-100">Create Set</button>
+    {loading ? <Loading /> : ""}
     </div>
   )
 }
