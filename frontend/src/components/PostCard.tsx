@@ -1,5 +1,5 @@
 import {useState,useEffect, useContext, useRef, MutableRefObject} from 'react';
-import {DataContext} from './CreateSet.tsx';
+import {DataCreateContext} from './CreateSet.tsx';
 import { FiMenu } from "react-icons/fi";
 import {Draggable} from '@shopify/draggable';
 
@@ -9,10 +9,10 @@ interface Props {
     definitionDefault: string;
 }
 
-const Card = ({index,wordDefault,definitionDefault}:Props) => {
+const PostCard = ({index,wordDefault,definitionDefault}:Props) => {
 const handle = useRef() as MutableRefObject<HTMLDivElement>;
 const card = useRef() as MutableRefObject<HTMLDivElement>;
-const dataContext = useContext(DataContext);
+const dataContext = useContext(DataCreateContext);
 const [cardId, setCardId] = useState(-1);
 
 useEffect(()=>{
@@ -95,4 +95,4 @@ useEffect(()=>{
   )
 }
 
-export default Card
+export default PostCard

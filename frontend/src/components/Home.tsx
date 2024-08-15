@@ -30,9 +30,9 @@ useEffect(()=>{
                     <h1 className="text-2xl">{set.title}</h1>
                     <h1 className="text-xl">{set.description}</h1>
                     <div className="p-4 flex flex-wrap justify-evenly">
-                        <button className="inline border-2 border-black px-2 py-1 my-1 rounded-lg  hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100">Study Set</button>
-                        <button className="inline border-2 border-black px-2 py-1 my-1 ml-2 rounded-lg hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100">Edit Set</button>
-                        <Link to={`/deleteSet/${set._id}`}><button className="inline border-2 border-black px-2 py-1 my-1 ml-2 rounded-lg  hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100">Delete Set</button></Link>
+                        <button className="inline border-2 border-black px-2 py-1 my-1 rounded-lg  hover:shadow-[0_5px_5px_-5px] ">Study Set</button>
+                        <Link to={`/editSet/${set._id}`}><button className="inline border-2 border-black px-2 py-1 my-1 ml-2 rounded-lg hover:shadow-[0_5px_5px_-5px] ">Edit Set</button></Link>
+                        <Link to={`/deleteSet/${set._id}`}><button className="inline border-2 border-black px-2 py-1 my-1 ml-2 rounded-lg  hover:shadow-[0_5px_5px_-5px] ">Delete Set</button></Link>
                     </div>
                 </div>
             )}

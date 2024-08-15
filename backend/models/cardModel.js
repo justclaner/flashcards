@@ -10,10 +10,6 @@ const cardSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        color: {
-            type: String,
-            required: false
-        },
         setId: {
             type: String,
             required: true

@@ -1,9 +1,11 @@
 import {useState,useEffect, createContext} from 'react';
 import {useNavigate} from 'react-router-dom';
 import Loading from './Loading.tsx';
-import Card from './Card.tsx';
+import Card from './PostCard.tsx';
+import axios from 'axios';
+import {url} from '../config.ts';
 import { DiVim } from 'react-icons/di';
-export const DataContext = createContext(null as any);
+export const DataCreateContext = createContext(null as any);
 const CreateSet = () => {
   const defaultLength = 3;
   const [wordList,setWordList] = useState<string[]>(["","",""]);
@@ -16,7 +18,7 @@ const CreateSet = () => {
 
   const [title,setTitle] = useState("");
   const [description,setDescription] = useState("");
-  const [color, setColor] = useState(""); //add default color here
+  const [color, setColor] = useState("#ffffff"); //add default color here
 
   const [isDragging, setIsDragging] = useState(false);
   const [moveIds,setMoveIds] = useState([-1,-1]);
@@ -53,10 +55,28 @@ const moveElements = (arr: any[]): any[] => {
   return newList2;
 }
 
-const postSet = async () => {
+const postFlashcards = async () => {
   try {
     setLoading(true);
-    
+    const setData = {
+      title: title,
+      description: description,
+      color, setColor
+    }
+    const set = await axios.post(`${url}/createSet`, setData);
+    const setId = set.data.result._id;
+    console.log(setId);
+    console.log(wordList);
+    for (let i = 0; i < wordList.length; i++) {
+      if (wordList[i] == "") {continue;}
+      const cardData = {
+        word: wordList[i],
+        definition: definitionList[i],
+        setId: setId
+      }
+
+      const card = await axios.post(`${url}/createCard`, cardData);
+    }
     setLoading(false);
     navigate('/home');
   } catch(e) {
@@ -79,11 +99,11 @@ const postSet = async () => {
       </div>
       <div className="p-4 w-[50%] mx-auto">
         <label className="text-3xl">Color:</label>
-        <input type="color" className="w-full border border-black h-[54px] p-1" onChange={(e)=>{setColor(e.target.value)}}/>
+        <input type="color" className="w-full border border-black h-[54px] p-1" defaultValue={color} onChange={(e)=>{setColor(e.target.value)}}/>
       </div>
 
     <div className="flex flex-col p-4 mt-[100px] w-[80%] border border-black rounded-lg mx-auto min-w-[350px]">
-    <DataContext.Provider 
+    <DataCreateContext.Provider 
     value={{
       wordList,setWordList,
       definitionList,setDefinitionList,
@@ -92,7 +112,7 @@ const postSet = async () => {
       moveIds,setMoveIds
       }}>
       {cardElements}
-    </DataContext.Provider>
+    </DataCreateContext.Provider>
     <button className="block border border-black rounded-lg px-2 py-1 mt-4 text-2xl mx-auto hover:bg-gray-200 active:bg-gray-100" 
     onClick={()=>{
       setWordList([...wordList,""]);
@@ -103,7 +123,7 @@ const postSet = async () => {
     ])
     }}>Create Another Flashcard</button>
     </div>
-    <button className="block border border-black rounded-lg px-2 py-1 mt-4 text-2xl mx-auto hover:bg-gray-200 active:bg-gray-100">Create Set</button>
+    <button className="block border border-black rounded-lg px-2 py-1 mt-4 text-2xl mx-auto hover:bg-gray-200 active:bg-gray-100" onClick={postFlashcards}>Create Set</button>
     {loading ? <Loading /> : ""}
     </div>
   )

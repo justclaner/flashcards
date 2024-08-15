@@ -9,7 +9,8 @@ router.get('/:setId?/:cardId?',async (req,res)=>{
     const {setId,cardId} = req.params;
     if (setId && cardId == 0) {return res.status(200).json(
         {
-        set: await Set.findById(setId)
+        set: await Set.findById(setId),
+        cards: await Card.find({setId:setId})
         }
     );} 
     if (setId == 0 && cardId) {return res.status(200).json(
@@ -47,7 +48,7 @@ router.post('/createSet', async (req,res)=>{
 
 router.post('/createCard', async (req,res)=>{
     try {
-        const {word, definition, color, setId} = req.body;
+        const {word, definition, setId} = req.body;
         if (!word || !definition) {return res.status(400).json({success:false,message:"Word and/or definition not provided."})}
         if (!setId || !await Set.exists(
             {_id: new mongoose.Types.ObjectId(setId)}
@@ -60,7 +61,6 @@ router.post('/createCard', async (req,res)=>{
             definition: definition,
             setId: setId
         };
-        if (color) {card.color = color;}
         const result = await Card.create(card);
         if (!result) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."})}
         return res.status(200).json({success:true,message:"Card successfully uploaded to MongoDB",result:result});
@@ -114,7 +114,19 @@ router.delete('/deleteSet/:setId', async (req,res) => {
 
     } catch(e) {
         console.error(e);
-        return resizeBy.status(500).json({success:false,message:e.message});
+        return res.status(500).json({success:false,message:e.message});
+    }
+})
+
+router.delete('/deleteSetCards/:setId', async (req,res) => {
+    try {
+        const {setId} = req.params;
+        const deleteCards = await Card.deleteMany({setId:setId});
+        if (!deleteCards) {return res.status(404).json({success:false,message:"Cards not found."});}
+        return res.status(200).json({success:true,message:"Cards in the set successfully deleted.",cards:deleteCards});
+    } catch(e) {
+        console.error(e);
+        return res.status(500).json({success:false,message:e.message})
     }
 })
 
