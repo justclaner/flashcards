@@ -57,6 +57,11 @@ const moveElements = (arr: any[]): any[] => {
 
 const postFlashcards = async () => {
   try {
+    if (title == "") {throw "Title required!"}
+    if (wordList.length == 0) {throw "At least one card is required!"}
+    for (let i = 0; i < wordList.length; i++) {
+      if (wordList[i] == "" || definitionList[i] == "") {throw "Word/definition fields can not be left blank."}
+    } 
     setLoading(true);
     const setData = {
       title: title,
