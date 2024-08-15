@@ -4,7 +4,6 @@ import Loading from './Loading.tsx';
 import Card from './PutCard.tsx';
 import axios from 'axios';
 import {url} from '../config.ts';
-import { DiVim } from 'react-icons/di';
 export const DataEditContext = createContext(null as any);
 const CreateSet = () => {
   const [wordList,setWordList] = useState<string[]>(["","",""]);
@@ -47,15 +46,6 @@ useEffect(()=>{
 },[])
 
 useEffect(()=>{
- // console.log(cardElements);
-},[cardElements])
-
-// useEffect(()=>{
-//  console.log("Words: [" + wordList + "]");
-// },[wordList])
-
-useEffect(()=>{
- //console.log("Definitions: [" + definitionList + "]");
  //if definitionList is updated, wordList must be too
  setCardElements(new Array(wordList.length).fill(0).map((obj,i)=>
     <Card key={i} index={i} wordDefault={wordList[i]} definitionDefault={definitionList[i]}/>
@@ -95,8 +85,8 @@ const putFlashcards = async () => {
       description: description,
       color: color
     }
-    const set = await axios.put(`${url}/editSet/${setId}`, setData);
-    const deleteCards = await axios.delete(`${url}/deleteSetCards/${setId}`);
+    await axios.put(`${url}/editSet/${setId}`, setData);
+    await axios.delete(`${url}/deleteSetCards/${setId}`);
 
     for (let i = 0; i < wordList.length; i++) {
       if (wordList[i] == "") {continue;}
@@ -105,7 +95,7 @@ const putFlashcards = async () => {
         definition: definitionList[i],
         setId: setId
       }
-      const card = await axios.post(`${url}/createCard`, cardData);
+      await axios.post(`${url}/createCard`, cardData);
     }
     setLoading(false);
     navigate('/home');

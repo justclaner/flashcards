@@ -4,8 +4,9 @@ import Loading from './Loading.tsx';
 import Card from './PostCard.tsx';
 import axios from 'axios';
 import {url} from '../config.ts';
-import { DiVim } from 'react-icons/di';
 export const DataCreateContext = createContext(null as any);
+
+
 const CreateSet = () => {
   const defaultLength = 3;
   const [wordList,setWordList] = useState<string[]>(["","",""]);
@@ -22,18 +23,6 @@ const CreateSet = () => {
 
   const [isDragging, setIsDragging] = useState(false);
   const [moveIds,setMoveIds] = useState([-1,-1]);
-
-useEffect(()=>{
- // console.log(cardElements);
-},[cardElements])
-
-useEffect(()=>{
- // console.log("Words: [" + wordList + "]");
-},[wordList])
-
-useEffect(()=>{
- // console.log("Definitions: [" + definitionList + "]");
-},[definitionList])
 
 useEffect(()=>{
   if (!isDragging && !moveIds.includes(-1)) {
@@ -63,6 +52,7 @@ const postFlashcards = async () => {
       if (wordList[i] == "" || definitionList[i] == "") {throw "Word/definition fields can not be left blank."}
     } 
     setLoading(true);
+    //create set first
     const setData = {
       title: title,
       description: description,
@@ -70,8 +60,7 @@ const postFlashcards = async () => {
     }
     const set = await axios.post(`${url}/createSet`, setData);
     const setId = set.data.result._id;
-    console.log(setId);
-    console.log(wordList);
+    //create all cards to be linked to the set
     for (let i = 0; i < wordList.length; i++) {
       if (wordList[i] == "") {continue;}
       const cardData = {
@@ -79,8 +68,7 @@ const postFlashcards = async () => {
         definition: definitionList[i],
         setId: setId
       }
-
-      const card = await axios.post(`${url}/createCard`, cardData);
+      await axios.post(`${url}/createCard`, cardData);
     }
     setLoading(false);
     navigate('/home');
