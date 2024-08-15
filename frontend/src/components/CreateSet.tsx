@@ -11,7 +11,7 @@ const CreateSet = () => {
   const defaultLength = 3;
   const [wordList,setWordList] = useState<string[]>(["","",""]);
   const [definitionList,setDefinitionList] = useState<string[]>(["","",""]);
-  const [cardElements,setCardElements] = useState(new Array(defaultLength).fill(0).map((obj,i)=> 
+  const [cardElements,setCardElements] = useState(new Array(defaultLength).fill(0).map((_obj,i)=> 
     <Card key={i} index={i} wordDefault={wordList[i]} definitionDefault={definitionList[i]}/>
       ));
   const [loading,setLoading] = useState(false);
@@ -35,7 +35,7 @@ useEffect(()=>{
 
 const moveElements = (arr: any[]): any[] => {
   const elem = arr[moveIds[0]];
-  const newList1 = arr.filter((obj:any,i:number)=>i != moveIds[0]);
+  const newList1 = arr.filter((_obj:any,i:number)=>i != moveIds[0]);
   const newList2 = [
     ...newList1.slice(0,moveIds[1]),
     elem,

@@ -8,7 +8,7 @@ export const DataEditContext = createContext(null as any);
 const CreateSet = () => {
   const [wordList,setWordList] = useState<string[]>(["","",""]);
   const [definitionList,setDefinitionList] = useState<string[]>(["","",""]);
-  const [cardElements,setCardElements] = useState(new Array(1).fill(0).map((obj,i)=> 
+  const [cardElements,setCardElements] = useState(new Array(1).fill(0).map((_obj,i)=> 
     <Card key={i} index={i} wordDefault={wordList[i]} definitionDefault={definitionList[i]}/>
       ));
   const [loading,setLoading] = useState(false);
@@ -27,10 +27,10 @@ useEffect(()=>{
         try {
             setLoading(true);
             const response = await axios.get(`${url}/${setId}/0`);
-            await setWordList(response.data.cards.map((card: { word: string; })=>{
+            setWordList(response.data.cards.map((card: { word: string; })=>{
                 return card.word;
             }))
-            await setDefinitionList(response.data.cards.map((card: { definition: string; })=>{
+            setDefinitionList(response.data.cards.map((card: { definition: string; })=>{
                 return card.definition;
             }))
             setTitle(response.data.set.title);
@@ -47,7 +47,7 @@ useEffect(()=>{
 
 useEffect(()=>{
  //if definitionList is updated, wordList must be too
- setCardElements(new Array(wordList.length).fill(0).map((obj,i)=>
+ setCardElements(new Array(wordList.length).fill(0).map((_obj,i)=>
     <Card key={i} index={i} wordDefault={wordList[i]} definitionDefault={definitionList[i]}/>
     ));
 },[definitionList])
@@ -63,7 +63,7 @@ useEffect(()=>{
 
 const moveElements = (arr: any[]): any[] => {
   const elem = arr[moveIds[0]];
-  const newList1 = arr.filter((obj:any,i:number)=>i != moveIds[0]);
+  const newList1 = arr.filter((_obj:any,i:number)=>i != moveIds[0]);
   const newList2 = [
     ...newList1.slice(0,moveIds[1]),
     elem,
