@@ -11,6 +11,8 @@ const ViewSet = () => {
   const [loading,setLoading] = useState(false);
   const [wordList,setWordList] = useState<string[]>([]);
   const [definitionList,setDefinitionList] = useState<string[]>([]);
+  const [currentCard,setCurrentCard] = useState(["",""])
+  const [showFront,setShowFront] = useState(true);
   useEffect(()=>{
     const getData = async () => {
         try {
@@ -33,17 +35,26 @@ const ViewSet = () => {
     getData();
   },[])
 
+
+
   useEffect(()=>{
-    console.log(definitionList);
+    setCurrentCard([wordList[0],definitionList[0]])
   },[definitionList])
+
   return (
-    <div className="p-4">
+    <div className="p-4 text-center w-fit m-auto">
         {loading ? <Loading /> :
-        <div className="text-left">
-            <h1 className="text-3xl">{title}</h1>
-            <h1 className="text-2xl">{description}</h1>
+        <div className="p-4">
+            <div className="text-left">
+                <h1 className="text-[48px]">{title}</h1>
+                <h1 className="text-2xl">{description}</h1>
+            </div>
+            <div className="p-[30px] flex items-center text-wrap break-words overflow-scroll justify-center border border-black rounded-lg w-[600px] h-[400px] m-auto">
+                <h1 className="text-[48px] max-w-[100%] max-h-[100%]">asdlkfjlasdkfjl;aksdfjlsdfsdfsdfkadsjflkajsdkfdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</h1>
+            </div>
         </div>
         }
+
     </div>
   )
 }
