@@ -4,7 +4,11 @@ const router = express.Router();
 import {Set} from '../models/setModel.js';
 import {Card} from '../models/cardModel.js';
 import {User} from '../models/userModel.js';
+import crypto from 'node:crypto';
 
+const hash = (string) => {
+    return crypto.hash('sha256',string);
+}
 
 router.post('/createUser', async (req,res)=> {
     try {
@@ -14,7 +18,7 @@ router.post('/createUser', async (req,res)=> {
 
         const userData = {
             username: username,
-            password: password
+            password: hash(password)
         }
 
         const result = await User.create(userData);
@@ -29,10 +33,12 @@ router.post('/createUser', async (req,res)=> {
 router.post('/logUser', async (req,res)=> {
     try {
         const {username,password} = req.body;
+        console.log(hash(password));
         if (!username || !password) {return res.status(404).json({success:false,message:"Both username and password must be provided."})}
         const findUser = await User.find({username:username})
-        if (findUser.length == 0) {return res.status(404).json({success:false,message:"Username incorrect or not found."})}
-        if (findUser[0].password != password) {return res.status(401).json({success:false,message:"Password incorrect."})}
+        console.log(findUser[0].password);
+        if (findUser.length == 0) {return res.status(404).json({success:false,message:"Username does not exist."})}
+        if (findUser[0].password != hash(password)) {return res.status(401).json({success:false,message:"Password incorrect."})}
         return res.status(200).json({success:true,message:"Successfully logged in with correct username and password."})
 
     } catch(e) {
@@ -50,7 +56,7 @@ router.put('/editUser/:userId', async (req,res)=> {
 
         const userData = {}
         if (username) {userData.username = username;}
-        if (password) {userData.password = password;}
+        if (password) {userData.password = hash(password);}
 
         const result = await User.findByIdAndUpdate(userId,userData);
         if (!result) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."});}
@@ -66,7 +72,14 @@ router.delete('/deleteUser/:userId', async (req,res)=> {
         const {userId} = req.params;
         const deleteUser = await User.findByIdAndDelete(userId);
         if (!deleteUser) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."});}
-        return res.status(200).json({success:true,message:"User successfully Deleted"});
+
+        const deleteSets = await Set.deleteMany({owner:userId})
+        if (!deleteSets) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."});}
+
+        const deleteCards = await Card.deleteMany({owner:userId})
+        if (!deleteCards) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."});}
+
+        return res.status(200).json({success:true,message:"User and all related data successfully Deleted"});
     } catch(e) {
         console.error(e);
         return res.status(500).json({success:false,message:e.message});
@@ -102,11 +115,12 @@ router.get('/:setId?/:cardId?',async (req,res)=>{
 
 router.post('/createSet', async (req,res)=>{
     try {
-        const {title, description, color, cardCount} = req.body;
+        const {title, description, color, cardCount, owner} = req.body;
         if (!title) {return res.status(400).json({success:false,message:"Title not provided."})}
         const set = {
             title:title,
-            cardCount:cardCount
+            cardCount:cardCount,
+            owner: owner
         };
         if (description) {set.description = description;}
         if (color) {set.color = color;}
@@ -121,7 +135,7 @@ router.post('/createSet', async (req,res)=>{
 
 router.post('/createCard', async (req,res)=>{
     try {
-        const {word, definition, setId} = req.body;
+        const {word, definition, setId, owner} = req.body;
         if (!word || !definition) {return res.status(400).json({success:false,message:"Word and/or definition not provided."})}
         if (!setId || !await Set.exists(
             {_id: new mongoose.Types.ObjectId(setId)}
@@ -132,7 +146,8 @@ router.post('/createCard', async (req,res)=>{
         const card = {
             word: word,
             definition: definition,
-            setId: setId
+            setId: setId,
+            owner: owner
         };
         const result = await Card.create(card);
         if (!result) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."})}
@@ -146,9 +161,8 @@ router.post('/createCard', async (req,res)=>{
 router.put('/editSet/:setId', async (req,res) => {
     try {
         const {setId} = req.params;
-        const {title, description, color, cardCount} = req.body;
+        const {title, description, color, cardCount, owner} = req.body;
         if (!title) {return res.status(400).json({success:false,message:"Title not provided."})}
-
         const result = await Set.findByIdAndUpdate(setId,req.body);
         if (!result) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."})}
         return res.status(200).json({success:true,message:"Set successfully updated",previous:result});
@@ -215,16 +229,17 @@ router.delete('/deleteCard/:cardId', async (req,res) => {
     }
 })
 
-router.delete('/deleteAll',async (req,res) => {
-    try {
-        const deleteSets = await Set.deleteMany({});
-        const deleteCards = await Card.deleteMany({});
-        return res.status(200).json("Deleted everything successfully.")
-    } catch(e) {
-        console.error(e);
-        return resizeBy.status(500).json({success:false,message:e.message});
-    }
-})
+//dangerous function
+// router.delete('/deleteAll',async (req,res) => {
+//     try {
+//         const deleteSets = await Set.deleteMany({});
+//         const deleteCards = await Card.deleteMany({});
+//         return res.status(200).json("Deleted everything successfully.")
+//     } catch(e) {
+//         console.error(e);
+//         return resizeBy.status(500).json({success:false,message:e.message});
+//     }
+// })
 
 export default router;
 

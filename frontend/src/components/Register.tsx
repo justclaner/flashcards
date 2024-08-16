@@ -9,7 +9,7 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  document.body.style.overflow = "hidden";
+  //document.body.style.overflow = "hidden";
 
   const postUser = async () => {
     try {
@@ -22,6 +22,7 @@ const Register = () => {
             enqueueSnackbar("Something went wrong",{variant:"error"})
             return;
         }
+        localStorage.setItem("flashcardsAppUsername",username);
         navigate('/home');
     } catch(e:any) {
         console.error(e);

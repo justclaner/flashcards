@@ -9,7 +9,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  document.body.style.overflow = "hidden";
+  //document.body.style.overflow = "hidden";
 
   const logUser = async () => {
     try {
@@ -24,14 +24,11 @@ const Login = () => {
             enqueueSnackbar("Something went wrong",{variant:"error"})
             return;
         }
+        localStorage.setItem("flashcardsAppUsername",username);
         navigate('/home');
     } catch(e:any) {
         console.error(e);
-        if (e.response.status == 405) {
-            enqueueSnackbar("Username is taken!",{variant:"error"})
-        } else {
-            enqueueSnackbar(e.response.data.message,{variant: "error"})
-        }
+        enqueueSnackbar(e.response.data.message,{variant: "error"})
     }
   }
   return (

@@ -54,11 +54,13 @@ const postFlashcards = async () => {
     } 
     setLoading(true);
     //create set first
+    const owner = localStorage.getItem(("flashcardsAppUsername"));
     const setData = {
       title: title,
       description: description,
       color: color,
-      cardCount: wordList.length
+      cardCount: wordList.length,
+      owner: owner
     }
     const set = await axios.post(`${url}/createSet`, setData);
     const setId = set.data.result._id;
@@ -68,9 +70,12 @@ const postFlashcards = async () => {
       const cardData = {
         word: wordList[i],
         definition: definitionList[i],
-        setId: setId
+        setId: setId,
+        owner: owner
       }
-      await axios.post(`${url}/createCard`, cardData);
+      
+      const postCard = await axios.post(`${url}/createCard`, cardData);
+      console.log(postCard);
     }
     setLoading(false);
     navigate('/home');

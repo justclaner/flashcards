@@ -17,6 +17,10 @@ const setSchema = mongoose.Schema(
         cardCount: {
             type: Number,
             required: true
+        },
+        owner: {
+            type: String,
+            required: true
         }
     },
     {

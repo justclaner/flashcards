@@ -13,6 +13,10 @@ const cardSchema = mongoose.Schema(
         setId: {
             type: String,
             required: true
+        },
+        owner: {
+            type: String,
+            required: true
         }
     },
     {
