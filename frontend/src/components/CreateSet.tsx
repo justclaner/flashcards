@@ -5,6 +5,7 @@ import Card from './PostCard.tsx';
 import axios from 'axios';
 import {url} from '../config.ts';
 export const DataCreateContext = createContext(null as any);
+import BackButton from './BackButton.tsx';
 
 
 const CreateSet = () => {
@@ -56,7 +57,8 @@ const postFlashcards = async () => {
     const setData = {
       title: title,
       description: description,
-      color, setColor
+      color: color,
+      cardCount: wordList.length
     }
     const set = await axios.post(`${url}/createSet`, setData);
     const setId = set.data.result._id;
@@ -80,6 +82,7 @@ const postFlashcards = async () => {
 
   return (
     <div className="p-4 pb-[200px]">
+      <BackButton />
       <h1 className="text-3xl text-center">Create a set</h1>
 
       <div className="p-4 w-[50%] mx-auto">

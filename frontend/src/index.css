@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+    --flip-duration: 0.25s;
+    --slide-duration: 0.25s;
+}
+
+.flipAnimation {
+animation: flipAnimation var(--flip-duration)
+}
+
+@keyframes flipAnimation {
+    0% {transform: rotateX(0)}
+    50% {transform:rotateX(90deg)}
+    100% {transform:rotateX(0)}
+}
+
+.slideLeft {
+    animation: slideLeftAnimation var(--slide-duration)
+}
+
+.slideRight {
+    animation: slideLeftAnimation var(--slide-duration) reverse
+}
+
+@keyframes slideLeftAnimation {
+    0% {transform: translateX(0)}
+    50% {transform: translateX(-70vw);
+        opacity:1;}
+    50.001% {transform: translateX(70vw);
+            opacity: 0;}
+    50.002% {transform: translateX(70vw);
+            opacity: 1;}
+    100% {transform: translateX(0)}
+}

@@ -29,6 +29,7 @@ useEffect(()=>{
                 <div className="p-4 rounded-lg border border-black min-w-[300px] max-w-[24%] m-2" key={set._id} style={{backgroundColor:`${set.color}`}}>
                     <h1 className="text-2xl">{set.title}</h1>
                     <h1 className="text-xl">{set.description}</h1>
+                    <h1 className="text-xl text-gray">{`${set.cardCount} terms`}</h1>
                     <div className="p-4 flex flex-wrap justify-evenly">
                         <Link to={`/viewSet/${set._id}`}><button className="inline border-2 border-black px-2 py-1 my-1 rounded-lg  hover:shadow-[0_5px_5px_-5px] ">Study Set</button></Link>
                         <Link to={`/editSet/${set._id}`}><button className="inline border-2 border-black px-2 py-1 my-1 ml-2 rounded-lg hover:shadow-[0_5px_5px_-5px] ">Edit Set</button></Link>

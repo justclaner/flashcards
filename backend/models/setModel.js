@@ -13,6 +13,10 @@ const setSchema = mongoose.Schema(
         color: {
             type: String,
             required: false
+        },
+        cardCount: {
+            type: Number,
+            required: true
         }
     },
     {

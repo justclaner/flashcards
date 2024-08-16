@@ -4,6 +4,7 @@ import Loading from './Loading.tsx';
 import Card from './PutCard.tsx';
 import axios from 'axios';
 import {url} from '../config.ts';
+import BackButton from './BackButton.tsx';
 export const DataEditContext = createContext(null as any);
 const CreateSet = () => {
   const [wordList,setWordList] = useState<string[]>(["","",""]);
@@ -54,7 +55,7 @@ useEffect(()=>{
 
 useEffect(()=>{
   if (!isDragging && !moveIds.includes(-1)) {
-    console.log(moveIds);
+    //console.log(moveIds);
     setCardElements(moveElements(cardElements));
     setWordList(moveElements(wordList));
     setDefinitionList(moveElements(definitionList));
@@ -83,7 +84,8 @@ const putFlashcards = async () => {
     const setData = {
       title: title,
       description: description,
-      color: color
+      color: color,
+      cardCount: wordList.length
     }
     await axios.put(`${url}/editSet/${setId}`, setData);
     await axios.delete(`${url}/deleteSetCards/${setId}`);
@@ -107,6 +109,7 @@ const putFlashcards = async () => {
 
   return (
       <div className="p-4 pb-[200px]">
+        <BackButton />
       <h1 className="text-3xl text-center">Create a set</h1>
 
     {loading ? <Loading /> : 

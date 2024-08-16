@@ -3,6 +3,61 @@ import mongoose from 'mongoose';
 const router = express.Router();
 import {Set} from '../models/setModel.js';
 import {Card} from '../models/cardModel.js';
+import {User} from '../models/userModel.js';
+
+
+router.post('/createUser', async (req,res)=> {
+    try {
+        const {username,password} = req.body;
+        const findUser = await User.find({username:username})
+        if (findUser.length != 0) {return res.status(405).json({success:false,message:"This username already exists"});}
+
+        const userData = {
+            username: username,
+            password: password
+        }
+
+        const result = await User.create(userData);
+        if (!result) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."})}
+        return res.status(200).json({success:true,message:"User successfully created!",result:result})
+    } catch(e) {
+        console.error(e);
+        return res.status(500).json({success:false,message:e.message});
+    }
+})
+
+router.put('/editUser/:userId', async (req,res)=> {
+    try {
+        const {userId} = req.params;
+        const {username,password} = req.body;
+        const findUser = await User.find({username:username})
+        if (findUser.length != 0) {return res.status(405).json({success:false,message:"This username already exists"});}
+
+        const userData = {}
+        if (username) {userData.username = username;}
+        if (password) {userData.password = password;}
+
+        const result = await User.findByIdAndUpdate(userId,userData);
+        if (!result) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."});}
+        return res.status(200).json({success:true,message:"User successfully created!",result:result});
+    } catch(e) {
+        console.error(e);
+        return res.status(500).json({success:false,message:e.message});
+    }
+})
+
+router.delete('/deleteUser/:userId', async (req,res)=> {
+    try {
+        const {userId} = req.params;
+        const deleteUser = await User.findByIdAndDelete(userId);
+        if (!deleteUser) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."});}
+        return res.status(200).json({success:true,message:"User successfully Deleted"});
+    } catch(e) {
+        console.error(e);
+        return res.status(500).json({success:false,message:e.message});
+    }
+})
+
 
 router.get('/:setId?/:cardId?',async (req,res)=>{
     try {
@@ -32,9 +87,12 @@ router.get('/:setId?/:cardId?',async (req,res)=>{
 
 router.post('/createSet', async (req,res)=>{
     try {
-        const {title, description, color} = req.body;
+        const {title, description, color, cardCount} = req.body;
         if (!title) {return res.status(400).json({success:false,message:"Title not provided."})}
-        const set = {title:title};
+        const set = {
+            title:title,
+            cardCount:cardCount
+        };
         if (description) {set.description = description;}
         if (color) {set.color = color;}
         const result = await Set.create(set);
@@ -73,7 +131,7 @@ router.post('/createCard', async (req,res)=>{
 router.put('/editSet/:setId', async (req,res) => {
     try {
         const {setId} = req.params;
-        const {title, description, color} = req.body;
+        const {title, description, color, cardCount} = req.body;
         if (!title) {return res.status(400).json({success:false,message:"Title not provided."})}
 
         const result = await Set.findByIdAndUpdate(setId,req.body);

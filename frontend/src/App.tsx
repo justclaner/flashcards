@@ -5,6 +5,7 @@ import DeleteSet from './components/DeleteSet.tsx';
 import CreateSet from './components/CreateSet.tsx';
 import EditSet from './components/EditSet.tsx';
 import ViewSet from './components/ViewSet.tsx';
+import Login from './components/Login.tsx';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
       <Route path='/createSet' element={<CreateSet />}></Route>
       <Route path='/editSet/:setId' element={<EditSet />}></Route>
       <Route path='viewSet/:setId' element={<ViewSet />}></Route>
+      <Route path='/login' element={<Login />}></Route>
     </Routes>
   )
 }
