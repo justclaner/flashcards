@@ -67,7 +67,7 @@ const ViewSet = () => {
                     <h1 className="text-[48px]">{title}</h1>
                     <h1 className="text-2xl">{description}</h1>
                 </div>
-                <div className="p-[30px] flex items-center text-wrap break-words overflow-auto justify-center border border-black rounded-xl w-[600px] h-[400px] m-auto"
+                <div className="p-[30px] flex items-center text-wrap break-words overflow-auto justify-center border border-black rounded-xl w-[275px] sm:w-[575px] h-[400px] m-auto w"
                     onClick={()=>{
                         console.log(flipDuration);
                         card.current.classList.add("flipAnimation")
@@ -79,7 +79,7 @@ const ViewSet = () => {
                         },flipDuration*1000)
                     }}
                     ref={card}>
-                    <h1 className="text-[48px] max-w-[100%] max-h-[100%] select-text">{showFront ? currentCard[0] : currentCard[1]}</h1>
+                    <h1 className="text-[36px] sm:text-[48px] max-w-[100%] max-h-[100%] select-text">{showFront ? currentCard[0] : currentCard[1]}</h1>
                 </div>
                 <div className="p-4 flex justify-between items-center">
                 <button className="inline  border border-black text-[48px] rounded-[50%]" onClick={()=>{

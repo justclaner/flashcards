@@ -26,6 +26,21 @@ router.post('/createUser', async (req,res)=> {
     }
 })
 
+router.post('/logUser', async (req,res)=> {
+    try {
+        const {username,password} = req.body;
+        if (!username || !password) {return res.status(404).json({success:false,message:"Both username and password must be provided."})}
+        const findUser = await User.find({username:username})
+        if (findUser.length == 0) {return res.status(404).json({success:false,message:"Username incorrect or not found."})}
+        if (findUser[0].password != password) {return res.status(401).json({success:false,message:"Password incorrect."})}
+        return res.status(200).json({success:true,message:"Successfully logged in with correct username and password."})
+
+    } catch(e) {
+        console.error(e);
+        return res.status(500).json({success:false,message:e.message});
+    }
+})
+
 router.put('/editUser/:userId', async (req,res)=> {
     try {
         const {userId} = req.params;
