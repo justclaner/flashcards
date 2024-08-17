@@ -9,8 +9,13 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  //document.body.style.overflow = "hidden";
 
+  useEffect(()=>{
+    if(localStorage.getItem("flashcardsAppUsername")) {
+        navigate('/home')
+    }
+  },[])
+  
   const postUser = async () => {
     try {
         const userData = {
