@@ -1,4 +1,4 @@
-import {useState,useEffect, createContext} from 'react';
+import {useState,useEffect, createContext, useRef} from 'react';
 import {useNavigate} from 'react-router-dom';
 import Loading from './Loading.tsx';
 import Card from './PostCard.tsx';
@@ -25,6 +25,10 @@ const CreateSet = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [moveIds,setMoveIds] = useState([-1,-1]);
 
+  const [isImporting, setIsImporting] = useState(false);
+  const importPage = useRef<HTMLDivElement>() as any;
+  const importTextarea = useRef<HTMLTextAreaElement>() as any;
+  const [importText, setImportText] = useState("");
 useEffect(()=>{
   if (!isDragging && !moveIds.includes(-1)) {
     console.log(moveIds);
@@ -33,6 +37,40 @@ useEffect(()=>{
     setDefinitionList(moveElements(definitionList));
   }
 },[moveIds])
+
+useEffect(()=>{
+  
+  let tempWordList = [];
+  let tempDefinitionList = [];
+  let seenWord = false;
+  let phrase = "";
+ // const whitespace = new Set([' ', '\t', '\n'])
+  for (let i = 0; i < importText.length; i++) {
+    let l = importText[i];
+    if ((l == ' ' || l == '\t') && !seenWord) {
+      continue;
+    } else if (l == '\t' && seenWord) {
+      seenWord = false;
+      tempWordList.push(phrase);
+      phrase = "";
+    } else if (l == '\n' && seenWord) {
+      seenWord = false;
+      tempDefinitionList.push(phrase);
+      phrase = "";
+    } else {
+      seenWord = true
+      phrase += l;
+    }
+  }
+  setWordList(tempWordList);
+  setDefinitionList(tempDefinitionList);
+  setCardElements(wordList.map((_obj,i)=>{
+
+    return <Card key={i} index={i} wordDefault={tempWordList[i]} definitionDefault={(i < tempDefinitionList.length) ? tempDefinitionList[i] : ""}/>
+  }))
+},[importText])
+
+
 
 const moveElements = (arr: any[]): any[] => {
   const elem = arr[moveIds[0]];
@@ -85,8 +123,47 @@ const postFlashcards = async () => {
   }
 }
 
+const handleTab = (e:any) => {
+  if (e.key == 'Tab') {
+    e.preventDefault();
+    const text = importTextarea.current;
+    const start = text.selectionStart;
+    const end = text.selectionEnd;
+
+    text.value = text.value.substring(0, start) + "\t" + text.value.substring(end);
+    text.selectionStart = text.selectionEnd = start + 1;
+  }
+}
+
+const textareaPlaceholder = "Word 1\tDefinition 1\nWord 2\tDefinition 2\nWord 3\tDefinition 3"
   return (
     <div className="p-4 pb-[200px]">
+      <div ref={importPage} className="absolute block bg-white asbsolute left-[-1px] right-[-1px] top-0 p-4 z-10 border border-black rounded-x h-fit"
+      style={{
+        translate: isImporting ? "0 0" : "0 -100%",
+        transition: "0.25s"
+      }}
+      >
+      <button className="block border border-black rounded-lg px-2 py-1 text-2xl hover:bg-gray-200 active:bg-gray-100"
+        onClick={()=>{
+          setIsImporting(false)
+        }}
+      >Cancel Import</button>
+      <h1 className="text3xl">Paste here</h1>
+      <textarea ref={importTextarea} className="block border border-black w-[100%] h-[375px] text-xl px-2 py-1" onKeyDown={(e)=>handleTab.call(this,e)}
+        placeholder={textareaPlaceholder}
+        ></textarea>
+       <div className="w-full flex justify-end">
+        <button className="block border border-black rounded-lg px-2 py-1 mt-4 text-3xl hover:bg-gray-200 active:bg-gray-100"
+        onClick={()=>{
+          setImportText(importTextarea.current.value);
+          importTextarea.current.value = "";
+          setIsImporting(false);
+        }}
+        >Import</button>
+      </div>
+      </div>
+      
       <BackButton />
       <h1 className="text-3xl text-center">Create a set</h1>
 
@@ -102,7 +179,13 @@ const postFlashcards = async () => {
         <label className="text-3xl">Color:</label>
         <input type="color" className="w-full border border-black h-[54px] p-1" defaultValue={color} onChange={(e)=>{setColor(e.target.value)}}/>
       </div>
-
+       <div className="px-4 w-[50%] mx-auto">
+        <button className="block border border-black rounded-lg px-2 py-1 mt-4 float-left text-2xl mx-auto hover:bg-gray-200 active:bg-gray-100"
+        onClick={()=>{
+          setIsImporting(true)
+        }}
+        >Import</button>
+        </div>
     <div className="flex flex-col p-4 mt-[100px] w-[80%] border border-black rounded-lg mx-auto min-w-[350px]">
     <DataCreateContext.Provider 
     value={{

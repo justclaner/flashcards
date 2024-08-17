@@ -30,7 +30,12 @@ useEffect(()=>{
 },[])
   return (
     <div className="p-4 pb-[200px] w-full">
-       <Link to='/createSet'><button className="absolute border border-black px-2 py-1 rounded-lg hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100">Log Out</button></Link>
+       <Link to='/createSet'><button className="absolute border border-black px-2 py-1 rounded-lg hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100"
+       onClick={()=>{
+        localStorage.removeItem("flashcardsAppUsername")
+        navigate('/login')
+       }}
+       >Log Out</button></Link>
         <h1 className="text-3xl mb-3 text-center">Flashcards App</h1>
         <div className="flex flex-wrap justify-evenly p-4 mx-auto my-2 border border-black w-[90%] rounded-lg min-w-[310px]">
             {loading ? <Loading /> : sets.map(set=>{

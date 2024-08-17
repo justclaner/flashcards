@@ -35,3 +35,12 @@ animation: flipAnimation var(--flip-duration)
             opacity: 1;}
     100% {transform: translateX(0)}
 }
+
+/* .slideDown {
+    animation: slideDownAnimation var(--slide-duration)
+}
+
+@keyframes slideDownAnimation {
+    0% {transform: translateY(-100vh)}
+    100% {transform: translateY(0)}
+} */
