@@ -4,6 +4,7 @@ import { SnackbarProvider, enqueueSnackbar} from 'notistack';
 import axios from 'axios';
 import {url} from '../config.ts';
 import {Link} from 'react-router-dom';
+import {sha256} from 'js-sha256';
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -29,7 +30,7 @@ const Login = () => {
             enqueueSnackbar("Something went wrong",{variant:"error"})
             return;
         }
-        localStorage.setItem("flashcardsAppUsername",username);
+        localStorage.setItem("flashcardsAppUsername",sha256(username));
         navigate('/home');
     } catch(e:any) {
         console.error(e);

@@ -29,6 +29,13 @@ const CreateSet = () => {
   const importPage = useRef<HTMLDivElement>() as any;
   const importTextarea = useRef<HTMLTextAreaElement>() as any;
   const [importText, setImportText] = useState("");
+
+useEffect(()=>{
+  console.log(wordList);
+  console.log(definitionList);
+  console.log(cardElements);
+},[definitionList])
+
 useEffect(()=>{
   if (!isDragging && !moveIds.includes(-1)) {
     console.log(moveIds);
@@ -39,15 +46,14 @@ useEffect(()=>{
 },[moveIds])
 
 useEffect(()=>{
-  
   let tempWordList = [];
   let tempDefinitionList = [];
   let seenWord = false;
   let phrase = "";
- // const whitespace = new Set([' ', '\t', '\n'])
+ const whitespace = new Set([' ', '\t', '\n'])
   for (let i = 0; i < importText.length; i++) {
     let l = importText[i];
-    if ((l == ' ' || l == '\t') && !seenWord) {
+    if (whitespace.has(l) && !seenWord) {
       continue;
     } else if (l == '\t' && seenWord) {
       seenWord = false;
@@ -62,12 +68,27 @@ useEffect(()=>{
       phrase += l;
     }
   }
-  setWordList(tempWordList);
-  setDefinitionList(tempDefinitionList);
-  setCardElements(wordList.map((_obj,i)=>{
+  tempDefinitionList.push(phrase);
+  if (tempWordList.length > 0) {
 
-    return <Card key={i} index={i} wordDefault={tempWordList[i]} definitionDefault={(i < tempDefinitionList.length) ? tempDefinitionList[i] : ""}/>
-  }))
+  let removeEmptyWords: string[] = [];
+  let removeEmptyDefinitions: string[] = [];
+  let removeEmptyCards : any[]= [];
+  cardElements.map((card,i)=>{
+    if (wordList[i] != "" || definitionList[i] != "") {
+      removeEmptyCards.push(card);
+      removeEmptyWords.push(wordList[i]);
+      removeEmptyDefinitions.push(definitionList[i]);
+    }
+  })
+  setWordList([...removeEmptyWords,...tempWordList]);
+  setDefinitionList([...removeEmptyDefinitions,...tempDefinitionList]);
+  setCardElements([
+    ...removeEmptyCards,
+    ...tempWordList.map((_obj,i)=>{
+    return <Card key={i+removeEmptyCards.length} index={i+removeEmptyCards.length} wordDefault={tempWordList[i]} definitionDefault={(i < tempDefinitionList.length) ? tempDefinitionList[i] : ""}/>
+  })])
+  }
 },[importText])
 
 
@@ -86,7 +107,7 @@ const moveElements = (arr: any[]): any[] => {
 const postFlashcards = async () => {
   try {
     if (title == "") {throw "Title required!"}
-    if (wordList.length == 0) {throw "At least one card is required!"}
+    if (cardElements.length == 0) {throw "At least one card is required!"}
     for (let i = 0; i < wordList.length; i++) {
       if (wordList[i] == "" || definitionList[i] == "") {throw "Word/definition fields can not be left blank."}
     } 
@@ -97,14 +118,13 @@ const postFlashcards = async () => {
       title: title,
       description: description,
       color: color,
-      cardCount: wordList.length,
+      cardCount: cardElements.length,
       owner: owner
     }
     const set = await axios.post(`${url}/createSet`, setData);
     const setId = set.data.result._id;
     //create all cards to be linked to the set
     for (let i = 0; i < wordList.length; i++) {
-      if (wordList[i] == "") {continue;}
       const cardData = {
         word: wordList[i],
         definition: definitionList[i],

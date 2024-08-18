@@ -3,6 +3,7 @@ import axios from 'axios';
 import {url} from '../config.ts';
 import Loading from './Loading.tsx';
 import {Link, useNavigate} from 'react-router-dom';
+import {sha256} from 'js-sha256';
 
 const Home = () => {
 const [sets, setSets] = useState<any[]>([]);
@@ -40,8 +41,8 @@ useEffect(()=>{
         <div className="flex flex-wrap justify-evenly p-4 mx-auto my-2 border border-black w-[90%] rounded-lg min-w-[310px]">
             {loading ? <Loading /> : sets.map(set=>{
                 //console.log(set.owner);
-                //console.log(user);
                 if (set.owner == localStorage.getItem("flashcardsAppUsername")) {
+                    
                 return <div className="p-4 rounded-lg border border-black min-w-[250px] max-w-[24%] m-2" key={set._id} style={{backgroundColor:`${set.color}`}}>
                     <h1 className="text-2xl">{set.title}</h1>
                     <h1 className="text-xl">{set.description}</h1>
