@@ -5,8 +5,10 @@ import Card from './PutCard.tsx';
 import axios from 'axios';
 import {url} from '../config.ts';
 import BackButton from './BackButton.tsx';
+import {sha256} from 'js-sha256';
 export const DataEditContext = createContext(null as any);
-const CreateSet = () => {
+
+const EditSet = () => {
   const [wordList,setWordList] = useState<string[]>(["","",""]);
   const [definitionList,setDefinitionList] = useState<string[]>(["","",""]);
   const [cardElements,setCardElements] = useState(new Array(1).fill(0).map((_obj,i)=> 
@@ -28,11 +30,11 @@ const CreateSet = () => {
   const importTextarea = useRef<HTMLTextAreaElement>() as any;
   const [importText, setImportText] = useState("");
 
-  
+  const authCode = localStorage.getItem("flashcardsAppAuthCode");
 useEffect(()=>{
-  console.log(wordList);
-  console.log(definitionList);
-  console.log(cardElements);
+  // console.log(wordList);
+  // console.log(definitionList);
+  // console.log(cardElements);
 },[definitionList])
 
 useEffect(()=>{
@@ -40,6 +42,10 @@ useEffect(()=>{
         try {
             setLoading(true);
             const response = await axios.get(`${url}/${setId}/0`);
+            if (sha256(sha256(response.data.set.owner)) != authCode) {
+              navigate('/home');
+              return;
+            }
             setWordList(response.data.cards.map((card: { word: string; })=>{
                 return card.word;
             }))
@@ -263,4 +269,4 @@ const textareaPlaceholder = "Word 1\tDefinition 1\nWord 2\tDefinition 2\nWord 3\
   )
 }
 
-export default CreateSet
+export default EditSet

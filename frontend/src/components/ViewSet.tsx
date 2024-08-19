@@ -102,7 +102,7 @@ const ViewSet = () => {
                         },flipDuration*1000)
                     }}
                     ref={card}>
-                    <h1 className="text-[36px] sm:text-[48px] max-w-[100%] max-h-[100%] select-text">{showFront ? currentCard[0] : currentCard[1]}</h1>
+                    <h1 className="text-[24px] sm:text-[28px] max-w-[100%] max-h-[100%] select-text">{showFront ? currentCard[0] : currentCard[1]}</h1>
                 </div>
 
                 <div className="p-4 flex justify-between items-center">

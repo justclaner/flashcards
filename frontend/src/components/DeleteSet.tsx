@@ -4,18 +4,24 @@ import BackButton from './BackButton.tsx';
 import {useNavigate,useParams} from 'react-router-dom';
 import Loading from './Loading.tsx';
 import {url} from '../config.ts';
+import {sha256} from 'js-sha256';
 
 const DeleteSet = () => {
     const [title, setTitle] = useState("");
     const [loading, setLoading] = useState(false);
     const {setId} = useParams();
     const navigate = useNavigate();
+    const authCode = localStorage.getItem("flashcardsAppAuthCode");
 
     useEffect(()=> {
         const getSet = async () => {
             try {
                 setLoading(true);
                 const response = await axios.get(`${url}/${setId}/0`);
+                if (sha256(sha256(response.data.set.owner)) != authCode) {
+                    navigate('/home');
+                    return;
+                }
                 setTitle(response.data.set.title);
                 setLoading(false);
             } catch(e) {

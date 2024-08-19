@@ -21,9 +21,56 @@ router.post('/createUser', async (req,res)=> {
             password: hash(password)
         }
 
-        const result = await User.create(userData);
-        if (!result) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."})}
-        return res.status(200).json({success:true,message:"User successfully created!",result:result})
+        const createUser = await User.create(userData);
+        if (!createUser) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."})}
+        console.log(createUser);
+
+        const defaultSet = {
+            title:"Sample Set",
+            description: "This set was generated automatically.",
+            color:"white",
+            cardCount:5,
+            owner:createUser.username
+        }
+        const createDefaultSet = await Set.create(defaultSet);
+
+        const defaultCards = [
+            {
+                word:"benevolent",
+                definition:"well meaning and kindly; friendly",
+                setId:createDefaultSet._id,
+                owner:createUser.username
+            },
+            {
+                word:"disdain",
+                definition:"the feeling that someone or something is unworthy of respect",
+                setId:createDefaultSet._id,
+                owner:createUser.username
+            },
+            {
+                word:"ephemeral",
+                definition:"lasting for a very short time",
+                setId:createDefaultSet._id,
+                owner:createUser.username
+            },
+            {
+                word:"fortuitous",
+                definition:"lucky; fortunate",
+                setId:createDefaultSet._id,
+                owner:createUser.username
+            },
+            {
+                word:"nonchalant",
+                definition:"feeling or appearing calm and relaxed",
+                setId:createDefaultSet._id,
+                owner:createUser.username
+            },
+        ]
+
+        for (let i = 0; i < defaultCards.length; i++) {
+            await Card.create(defaultCards[i]);
+        }
+        return res.status(200).json({success:true,message:"User successfully created!",result:createUser})
     } catch(e) {
         console.error(e);
         return res.status(500).json({success:false,message:e.message});
@@ -36,7 +83,8 @@ router.post('/logUser', async (req,res)=> {
         console.log(hash(password));
         if (!username || !password) {return res.status(404).json({success:false,message:"Both username and password must be provided."})}
         const findUser = await User.find({username:username})
-        console.log(findUser[0].password);
+        if (!findUser) {return res.status(404).json({success:false,message:"User not found."})}
+        console.log(findUser[0]);
         if (findUser.length == 0) {return res.status(404).json({success:false,message:"Username does not exist."})}
         if (findUser[0].password != hash(password)) {return res.status(401).json({success:false,message:"Password incorrect."})}
         return res.status(200).json({success:true,message:"Successfully logged in with correct username and password."})
