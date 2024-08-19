@@ -175,7 +175,7 @@ router.put('/editSet/:setId', async (req,res) => {
 router.put('/editCard/:cardId', async (req,res) => {
     try {
         const {cardId} = req.params;
-        const {word, definition, color, setId} = req.body;
+        const {word, definition, color, setId, owner} = req.body;
         if (!word || !definition) {return res.status(400).json({success:false,message:"Word and/or definition not provided."})}
 
         const result = await Card.findByIdAndUpdate(cardId,req.body);

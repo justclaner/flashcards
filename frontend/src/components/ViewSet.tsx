@@ -4,6 +4,8 @@ import axios from 'axios';
 import Loading from './Loading.tsx';
 import {url} from '../config.ts';
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
+import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
+import { RxShuffle } from "react-icons/rx";
 import BackButton from './BackButton.tsx';
 
 const ViewSet = () => {
@@ -59,15 +61,15 @@ const ViewSet = () => {
   return (
     <div className="p-4">
         <BackButton/>
-        <div className="p-4 text-center w-fit m-auto select-none">
+        <div className="py-4 sm:px-3 text-center w-fit mx-auto select-none">
             
             {loading ? <Loading /> :
-            <div className="p-4">
+            <div className="sm:p-4">
                 <div className="text-left">
                     <h1 className="text-[48px]">{title}</h1>
                     <h1 className="text-2xl">{description}</h1>
                 </div>
-                <div className="p-[30px] flex items-center text-wrap break-words overflow-auto justify-center border border-black rounded-xl w-[275px] sm:w-[575px] h-[400px] m-auto w"
+                <div className="p-[30px] flex items-center text-wrap break-words overflow-auto justify-center border border-black rounded-xl w-[80vw] min-w-[176px] sm:w-[550px] h-[400px]"
                     onClick={()=>{
                         console.log(flipDuration);
                         card.current.classList.add("flipAnimation")
@@ -81,33 +83,45 @@ const ViewSet = () => {
                     ref={card}>
                     <h1 className="text-[36px] sm:text-[48px] max-w-[100%] max-h-[100%] select-text">{showFront ? currentCard[0] : currentCard[1]}</h1>
                 </div>
+
                 <div className="p-4 flex justify-between items-center">
-                <button className="inline  border border-black text-[48px] rounded-[50%]" onClick={()=>{
-                    if (cardIndex > 0) {
-                        card.current.classList.add("slideRight")
-                        setTimeout(()=>{
-                        setCardIndex(cardIndex - 1);
-                        setShowFront(true);
-                        },slideDuration*1000/2)
-                        setTimeout(()=>{
-                        card.current.classList.remove("slideRight")
-                        },slideDuration*1000)
-                    }
-                    }}><GoChevronLeft /></button>
-                <h1 className="text-3xl">{`${cardIndex + 1}/${wordList.length}`}</h1>
-                <button className="inline float-right border border-black text-[48px] rounded-[50%]" onClick={()=>{
-                    if (cardIndex < wordList.length - 1) {
-                        card.current.classList.add("slideLeft")
-                        setTimeout(()=>{
-                        setCardIndex(cardIndex + 1);
-                        setShowFront(true);
-                        },slideDuration*1000/2)
-                        setTimeout(()=>{
-                        card.current.classList.remove("slideLeft")
-                        },slideDuration*1000)
-                    }
-                    }}><GoChevronRight /></button>
+                <div>
+                    <button className="p-2 border border-black text-[48px] rounded-[50%]"><BsChevronDoubleLeft /></button>
+                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%]" onClick={()=>{
+                        if (cardIndex > 0) {
+                            card.current.classList.add("slideRight")
+                            setTimeout(()=>{
+                            setCardIndex(cardIndex - 1);
+                            setShowFront(true);
+                            },slideDuration*1000/2)
+                            setTimeout(()=>{
+                            card.current.classList.remove("slideRight")
+                            },slideDuration*1000)
+                        }
+                        }}><GoChevronLeft /></button>
                 </div>
+                <h1 className="text-3xl">{`${cardIndex + 1}/${wordList.length}`}</h1>
+                <div>
+                    <button className="p-2 border border-black text-[48px] rounded-[50%]" onClick={()=>{
+                        if (cardIndex < wordList.length - 1) {
+                            card.current.classList.add("slideLeft")
+                            setTimeout(()=>{
+                            setCardIndex(cardIndex + 1);
+                            setShowFront(true);
+                            },slideDuration*1000/2)
+                            setTimeout(()=>{
+                            card.current.classList.remove("slideLeft")
+                            },slideDuration*1000)
+                        }
+                        }}><GoChevronRight /></button>
+                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%]"><BsChevronDoubleRight /></button>
+                </div>
+                </div>
+
+                <div className="p-4 flex justify-end items-center">
+                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%]"><RxShuffle /></button>
+                </div>
+
             </div>
             }
         </div>

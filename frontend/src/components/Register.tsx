@@ -12,7 +12,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   useEffect(()=>{
-    if(localStorage.getItem("flashcardsAppUsername")) {
+    if(localStorage.getItem("flashcardsAppAuthCode")) {
         navigate('/home')
     }
   },[])
@@ -28,7 +28,8 @@ const Register = () => {
             enqueueSnackbar("Something went wrong",{variant:"error"})
             return;
         }
-        localStorage.setItem("flashcardsAppUsername",sha256(username));
+        localStorage.setItem("flashcardsAppUsername",username);
+        localStorage.setItem("flashcardsAppAuthCode",sha256(sha256(username)));
         navigate('/home');
     } catch(e:any) {
         console.error(e);
