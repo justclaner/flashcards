@@ -86,8 +86,8 @@ router.post('/logUser', async (req,res)=> {
         if (!findUser) {return res.status(404).json({success:false,message:"User not found."})}
         console.log(findUser[0]);
         if (findUser.length == 0) {return res.status(404).json({success:false,message:"Username does not exist."})}
-        if (findUser[0].password != hash(password)) {return res.status(401).json({success:false,message:"Password incorrect."})}
-        return res.status(200).json({success:true,message:"Successfully logged in with correct username and password."})
+        if (findUser[0].password != hash(password)) {return res.status(401).json({success:false,message:"Password incorrect"})}
+        return res.status(200).json({success:true,message:"Successfully logged in with correct username and password.",user:findUser})
 
     } catch(e) {
         console.error(e);

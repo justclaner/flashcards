@@ -34,7 +34,9 @@ useEffect(()=>{
         <h1 className="text-xl my-2">Logged in as {username}</h1>
        <button className="absolute border border-black px-2 py-1 rounded-lg hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100"
        onClick={()=>{
-        localStorage.removeItem("flashcardsAppAuthCode")
+        localStorage.removeItem("flashcardsAppUserId");
+        localStorage.removeItem("flashcardsAppUsername");
+        localStorage.removeItem("flashcardsAppAuthCode");
         navigate('/login')
        }}
        >Log Out</button>
