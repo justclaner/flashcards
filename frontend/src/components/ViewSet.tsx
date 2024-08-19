@@ -58,6 +58,27 @@ const ViewSet = () => {
   useEffect(()=>{
   },[currentCard])
 
+  const shuffle = () => {
+    const newWordList = wordList.map(obj=>obj);
+    const newDefinitionList = definitionList.map(obj=>obj);
+
+    for (let i = newWordList.length - 1; i >= 0; i--) {
+        const j = Math.floor(Math.random()*(i+1))
+        const tempWord = newWordList[i];
+        const tempDefinition = newDefinitionList[i];
+
+        newWordList[i] = newWordList[j];
+        newDefinitionList[i] = newDefinitionList[j];
+
+        newWordList[j] = tempWord;
+        newDefinitionList[j] = tempDefinition;
+    }
+    setWordList(newWordList);
+    setDefinitionList(newDefinitionList);
+    setShowFront(true);
+    setCardIndex(0);
+  }
+
   return (
     <div className="p-4">
         <BackButton/>
@@ -86,7 +107,16 @@ const ViewSet = () => {
 
                 <div className="p-4 flex justify-between items-center">
                 <div>
-                    <button className="p-2 border border-black text-[48px] rounded-[50%]"><BsChevronDoubleLeft /></button>
+                    <button className="p-2 border border-black text-[48px] rounded-[50%]" onClick={()=>{
+                            card.current.classList.add("slideRight")
+                            setTimeout(()=>{
+                            setCardIndex(0);
+                            setShowFront(true);
+                            },slideDuration*1000/2)
+                            setTimeout(()=>{
+                            card.current.classList.remove("slideRight")
+                            },slideDuration*1000)
+                    }}><BsChevronDoubleLeft /></button>
                     <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%]" onClick={()=>{
                         if (cardIndex > 0) {
                             card.current.classList.add("slideRight")
@@ -114,12 +144,21 @@ const ViewSet = () => {
                             },slideDuration*1000)
                         }
                         }}><GoChevronRight /></button>
-                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%]"><BsChevronDoubleRight /></button>
+                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%]" onClick={()=>{
+                            card.current.classList.add("slideLeft")
+                            setTimeout(()=>{
+                            setCardIndex(wordList.length - 1);
+                            setShowFront(true);
+                            },slideDuration*1000/2)
+                            setTimeout(()=>{
+                            card.current.classList.remove("slideLeft")
+                            },slideDuration*1000)
+                    }}><BsChevronDoubleRight /></button>
                 </div>
                 </div>
 
                 <div className="p-4 flex justify-end items-center">
-                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%]"><RxShuffle /></button>
+                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%]" onClick={()=>{shuffle();}}><RxShuffle /></button>
                 </div>
 
             </div>
