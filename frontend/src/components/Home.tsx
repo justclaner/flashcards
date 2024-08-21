@@ -44,7 +44,7 @@ useEffect(()=>{
         <div className="flex flex-wrap justify-evenly p-4 mx-auto my-2 border border-black w-[90%] rounded-lg min-w-[310px]">
             {loading ? <Loading /> : sets.map(set=>{
                 //console.log(set.owner);
-                if (set.owner == localStorage.getItem("flashcardsAppUsername")) {
+                if (sha256(sha256(set.owner)) == localStorage.getItem("flashcardsAppAuthCode")) {
                     
                 return <div className="p-4 rounded-lg border border-black min-w-[250px] max-w-[24%] m-2" key={set._id} style={{backgroundColor:`${set.color}`}}>
                     <h1 className="text-2xl">{set.title}</h1>
