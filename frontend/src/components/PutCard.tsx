@@ -1,7 +1,6 @@
 import {useState,useEffect, useContext, useRef, MutableRefObject} from 'react';
 import {DataEditContext} from './EditSet.tsx';
 import { FiMenu } from "react-icons/fi";
-import {Draggable} from '@shopify/draggable';
 
 interface Props {
     index: number;
@@ -35,7 +34,7 @@ useEffect(()=>{
 
 
   return (
-    <div className="my-4 p-4 border border-black rounded-lg w-full mx-auto h-fit bg-white" ref={card} 
+    <div className="flex flex-col lg:block my-4 p-4 border border-black rounded-lg w-full mx-auto h-fit bg-white" ref={card} 
     onDrag={()=>{
         dataContext.setMoveIds([cardId,dataContext.moveIds[1]]);
         dataContext.setIsDragging(true);
@@ -58,16 +57,16 @@ useEffect(()=>{
             onClick={()=>{
                 console.log("index:"+index);
                 console.log("cardId:"+cardId);
-                dataContext.setWordList(dataContext.wordList.filter((word: string,i:number)=>i != cardId))
-                dataContext.setDefinitionList(dataContext.definitionList.filter((definition: string,i:number)=>i != cardId))
-                dataContext.setCardElements(dataContext.cardElements.filter((element: string,i:number)=>i != cardId))
+                dataContext.setWordList(dataContext.wordList.filter((_word: string,i:number)=>i != cardId))
+                dataContext.setDefinitionList(dataContext.definitionList.filter((_definition: string,i:number)=>i != cardId))
+                dataContext.setCardElements(dataContext.cardElements.filter((_element: string,i:number)=>i != cardId))
             }}>Delete</button>
         </div>
         </div>
         <hr className="border-1 border-black mb-5 mx-[-16px]"/>
-        <div className="float-left p-2 flex items-center w-[50%]">
-        <label className="text-2xl">Word/Phrase:</label>
-        <textarea name="" id="" className="text-lg border border-black rounded-lg resize-none ml-3 p-2 w-full" 
+        <div className="float-left p-2 flex items-center w-full lg:w-[50%]">
+        <label className="text-sm sm:text-2xl">Word/Phrase:</label>
+        <textarea name="" id="" className="text-sm sm:text-lg border border-black rounded-lg resize-none ml-3 p-2 w-full" 
         defaultValue={wordDefault} onChange={(e)=>dataContext.setWordList(
             dataContext.wordList.map((word: string,i: number) => {
                 if (i == index) {
@@ -78,9 +77,9 @@ useEffect(()=>{
             })
         )} rows={2}></textarea>
         </div>
-        <div className="float-left p-2 flex items-center w-[50%]">
-        <label className="text-2xl">Definition:</label>
-        <textarea name="" id="" className="text-lg border border-black rounded-lg resize-none ml-3 p-2 w-full" 
+        <div className="float-left p-2 flex items-center w-full lg:w-[50%]">
+        <label className="text-sm sm:text-2xl">Definition:</label>
+        <textarea name="" id="" className="text-sm sm:text-lg border border-black rounded-lg resize-none ml-3 p-2 w-full" 
         defaultValue={definitionDefault} onChange={(e)=>dataContext.setDefinitionList(
             dataContext.definitionList.map((definition:string,i:number)=>{
                 if (i == index) {

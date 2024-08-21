@@ -203,7 +203,7 @@ const textareaPlaceholder = "Word 1\tDefinition 1\nWord 2\tDefinition 2\nWord 3\
           setIsImporting(false)
         }}
       >Cancel Import</button>
-      <h1 className="text3xl">Paste here</h1>
+      <h1 className="text-xl">Paste here</h1>
       <textarea ref={importTextarea} className="block border border-black w-[100%] h-[375px] text-xl px-2 py-1" onKeyDown={(e)=>handleTab.call(this,e)}
         placeholder={textareaPlaceholder}
         ></textarea>
@@ -221,23 +221,23 @@ const textareaPlaceholder = "Word 1\tDefinition 1\nWord 2\tDefinition 2\nWord 3\
       <h1 className="text-3xl text-center">Edit a set</h1>
 
     {loading ? <Loading /> : 
-      <div className="p-4 w-[50%] mx-auto">
+      <div className="p-4 w-full w-full sm:w-[90%] lg:w-[50%] mx-auto">
         <label className="text-3xl">Title:</label>
         <input type="text" className="text-3xl w-full border border-black p-2" defaultValue={title} onChange={(e)=>{setTitle(e.target.value)}}/>
       </div>}
 
       {loading ? <Loading /> : 
-      <div className="p-4 w-[50%] mx-auto">
+      <div className="p-4 w-full w-full sm:w-[90%] lg:w-[50%] mx-auto">
         <label className="text-3xl">Description:</label>
         <input type="text" className="text-3xl w-full border border-black p-2" defaultValue={description} onChange={(e)=>{setDescription(e.target.value)}}/>
       </div>}
 
       {loading ? <Loading /> : 
-      <div className="p-4 w-[50%] mx-auto">
+      <div className="p-4 w-full w-full sm:w-[90%] lg:w-[50%] mx-auto">
         <label className="text-3xl">Color:</label>
         <input type="color" className="w-full border border-black h-[54px] p-1" defaultValue={color} onChange={(e)=>{setColor(e.target.value)}}/>
       </div>}
-      <div className="px-4 w-[50%] mx-auto">
+      <div className="px-4 w-full sm:w-[90%] lg:w-[50%] mx-auto">
         <button className="block border border-black rounded-lg px-2 py-1 mt-4 float-left text-2xl mx-auto hover:bg-gray-200 active:bg-gray-100"
         onClick={()=>{
           setIsImporting(true)
@@ -245,7 +245,7 @@ const textareaPlaceholder = "Word 1\tDefinition 1\nWord 2\tDefinition 2\nWord 3\
         >Import</button>
         </div>
     {loading ? <Loading /> : 
-    <div className="flex flex-col p-4 mt-[100px] w-[80%] border border-black rounded-lg mx-auto min-w-[350px]">
+    <div className="flex flex-col p-4 mt-[100px] w-full sm:w-[90%] lg:w-[80%] border border-black rounded-lg mx-auto min-w-[270px]">
     <DataEditContext.Provider 
     value={{
       wordList,setWordList,
