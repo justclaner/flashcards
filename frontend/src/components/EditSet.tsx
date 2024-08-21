@@ -6,7 +6,9 @@ import axios from 'axios';
 import {url} from '../config.ts';
 import BackButton from './BackButton.tsx';
 import {sha256} from 'js-sha256';
+import { SnackbarProvider, enqueueSnackbar} from 'notistack';
 export const DataEditContext = createContext(null as any);
+
 
 const EditSet = () => {
   const [wordList,setWordList] = useState<string[]>(["","",""]);
@@ -167,9 +169,9 @@ const putFlashcards = async () => {
     }
     setLoading(false);
     navigate('/home');
-  } catch(e) {
+  } catch(e:any) {
     setLoading(false);
-    console.error(e);
+    enqueueSnackbar(e,{variant: "error"})
   }
 }
 
@@ -189,7 +191,8 @@ const textareaPlaceholder = "Word 1\tDefinition 1\nWord 2\tDefinition 2\nWord 3\
 
   return (
       <div className="p-4 pb-[200px]">
-              <div ref={importPage} className="absolute block bg-white asbsolute left-[-1px] right-[-1px] top-0 p-4 z-10 border border-black rounded-x h-fit"
+      <SnackbarProvider transitionDuration={250} autoHideDuration={2000}/>
+      <div ref={importPage} className="absolute block bg-white asbsolute left-[-1px] right-[-1px] top-0 p-4 z-10 border border-black rounded-x h-fit"
       style={{
         translate: isImporting ? "0 0" : "0 -100%",
         transition: "0.25s"

@@ -5,6 +5,7 @@ import axios from 'axios';
 import {url} from '../config.ts';
 import BackButton from './BackButton.tsx';
 import Loading from './Loading.tsx';
+import { SnackbarProvider, enqueueSnackbar} from 'notistack';
 
 const Settings = () => {
     const navigate = useNavigate();
@@ -35,23 +36,21 @@ const Settings = () => {
             navigate('/login');
         } catch(e:any) {
             setLoading(false);
-            console.log(e.response.data.message);
+            enqueueSnackbar(e.response.data.message,{variant: "error"})
         }
     }
 
     return (
         <div className="p-4">
+            <SnackbarProvider transitionDuration={250} autoHideDuration={2000}/>
             <BackButton />
             <h1 className="text-center text-3xl">User Settings</h1>
             <div className="p-4 w-[95%] md:w-[50%] mx-auto border border-black">
-                <div className="flex justify-between items-center py-2">
-                    <div>
+                <div className="flex justify-left items-center py-2">
                         <label className="text-xl">Current username:</label>
-                        <input type="text" className="ml-2 px-2 text-xl w-[100%] md:w-[175px] focus:border focus:border-black" defaultValue={username!} 
+                        <input type="text" className="ml-2 px-2 text-xl w-[100%] focus:border focus:border-black" defaultValue={username!} 
                         onChange={(e)=>{setNewUsername(e.target.value);}}
                         />
-                    </div>
-                    <button className="border border-black ml-2 px-2 py-1 text-xl rounded-xl hover:bg-gray-200 active:bg-gray-100">Change Username</button>
                 </div>
                 <div className="flex justify-end items-center py-2">
                     <button className="border border-black ml-2 px-2 py-1 text-xl rounded-xl hover:bg-gray-200 active:bg-gray-100">Change Password</button>
