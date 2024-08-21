@@ -7,6 +7,7 @@ import EditSet from './components/EditSet.tsx';
 import ViewSet from './components/ViewSet.tsx';
 import Register from './components/Register.tsx';
 import Login from './components/Login.tsx';
+import Settings from './components/Settings.tsx';
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
       <Route path='viewSet/:setId' element={<ViewSet />}></Route>
       <Route path='/register' element={<Register />}></Route>
       <Route path='/login' element={<Login />}></Route>
+      <Route path='/settings' element={<Settings />}></Route>
     </Routes>
   )
 }

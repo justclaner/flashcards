@@ -95,6 +95,22 @@ router.post('/logUser', async (req,res)=> {
     }
 })
 
+router.put('/editUsername/:userId', async (req,res) => {
+    try {
+        const {userId} = req.params;
+        const {oldUsername, newUsername} = req.body;
+        const findUser = await User.find({username:newUsername});
+        if (findUser.length != 0) {return res.status(405).json({success:false,message:"This username already exists"});}
+        await User.findByIdAndUpdate(userId,{username:newUsername});
+        await Set.updateMany({owner:oldUsername},{owner:newUsername});
+        await Card.updateMany({owner:oldUsername},{owner:newUsername});
+        res.status(200).json({success:true,message:"Username and all related data succesfully updated."});
+    } catch(e) {
+        console.error(e);
+        return res.status(500).json({success:false,message:e.message});
+    }
+})
+
 router.put('/editUser/:userId', async (req,res)=> {
     try {
         const {userId} = req.params;
@@ -121,10 +137,10 @@ router.delete('/deleteUser/:userId', async (req,res)=> {
         const deleteUser = await User.findByIdAndDelete(userId);
         if (!deleteUser) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."});}
 
-        const deleteSets = await Set.deleteMany({owner:userId})
+        const deleteSets = await Set.deleteMany({owner:userId});
         if (!deleteSets) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."});}
 
-        const deleteCards = await Card.deleteMany({owner:userId})
+        const deleteCards = await Card.deleteMany({owner:userId});
         if (!deleteCards) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."});}
 
         return res.status(200).json({success:true,message:"User and all related data successfully Deleted"});

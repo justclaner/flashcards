@@ -6,7 +6,7 @@ import axios from 'axios';
 import {url} from '../config.ts';
 export const DataCreateContext = createContext(null as any);
 import BackButton from './BackButton.tsx';
-
+import {sha256} from 'js-sha256';
 
 const CreateSet = () => {
   const defaultLength = 3;
@@ -30,11 +30,20 @@ const CreateSet = () => {
   const importTextarea = useRef<HTMLTextAreaElement>() as any;
   const [importText, setImportText] = useState("");
 
+  const username = localStorage.getItem("flashcardsAppUsername");
+  const authCode = localStorage.getItem("flashcardsAppAuthCode");
+
 useEffect(()=>{
-  console.log(wordList);
-  console.log(definitionList);
-  console.log(cardElements);
-},[definitionList])
+  if(!authCode || sha256(sha256(username as any)) != authCode) {
+    navigate('/login');
+  }
+},[])
+
+// useEffect(()=>{
+//   console.log(wordList);
+//   console.log(definitionList);
+//   console.log(cardElements);
+// },[definitionList])
 
 useEffect(()=>{
   if (!isDragging && !moveIds.includes(-1)) {

@@ -4,6 +4,7 @@ import {url} from '../config.ts';
 import Loading from './Loading.tsx';
 import {Link, useNavigate} from 'react-router-dom';
 import {sha256} from 'js-sha256';
+import { FaGear } from "react-icons/fa6";
 
 const Home = () => {
 const [sets, setSets] = useState<any[]>([]);
@@ -31,7 +32,12 @@ useEffect(()=>{
 },[])
   return (
     <div className="p-4 pb-[200px] w-full">
-        <h1 className="text-xl my-2">Logged in as {username}</h1>
+        <div className="flex justify-between items-center">
+            <h1 className="text-xl my-2">Logged in as {username}</h1>
+            <Link to="/settings">
+                <FaGear className="text-[48px] text-slate-500 duration-500 hover:rotate-180 hover:text-slate-300 active:text-slate-400"/>
+            </Link>
+        </div>
        <button className="absolute border border-black px-2 py-1 rounded-lg hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100"
        onClick={()=>{
         localStorage.removeItem("flashcardsAppUserId");
