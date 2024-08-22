@@ -56,6 +56,10 @@ useEffect(()=>{
 },[moveIds])
 
 useEffect(()=>{
+  console.log(cardElements);
+},[cardElements])
+
+useEffect(()=>{
   let tempWordList = [];
   let tempDefinitionList = [];
   let seenWord = false;

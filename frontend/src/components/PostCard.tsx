@@ -66,11 +66,11 @@ useEffect(()=>{
         </div>
         <hr className="border-1 border-black mb-5 mx-[-16px]"/>
         <div className="float-left p-2 flex items-center w-full lg:w-[50%]">
-        <label className="text-sm sm:text-2xl">Word/Phrase:</label>
+        <label className="text-sm sm:text-2xl">Word:</label>
         <textarea name="" id="" className="text-sm sm:text-lg border border-black rounded-lg resize-none ml-3 p-2 w-full" 
         defaultValue={wordDefault} onChange={(e)=>dataContext.setWordList(
-            dataContext.wordList.map((word: string,i: number) => {
-                if (i == index) {
+            dataContext.wordList.map((word: string,i: number) => {   
+                if (i == cardId) {
                     return e.target.value;
                 } else {
                     return word;
@@ -83,7 +83,7 @@ useEffect(()=>{
         <textarea name="" id="" className="text-sm sm:text-lg border border-black rounded-lg resize-none ml-3 p-2 w-full" 
         defaultValue={definitionDefault} onChange={(e)=>dataContext.setDefinitionList(
             dataContext.definitionList.map((definition:string,i:number)=>{
-                if (i == index) {
+                if (i == cardId) {
                     return e.target.value;
                 } else {
                     return definition;
