@@ -1,12 +1,15 @@
 import {useState, useEffect, useRef} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import axios from 'axios';
 import Loading from './Loading.tsx';
 import {url} from '../config.ts';
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
 import { RxShuffle } from "react-icons/rx";
+import { FaPen } from "react-icons/fa";
 import BackButton from './BackButton.tsx';
+import { GoBook } from "react-icons/go";
+import { IoNewspaperOutline } from "react-icons/io5";
 
 const ViewSet = () => {
   const {setId} = useParams();
@@ -82,7 +85,7 @@ const ViewSet = () => {
   return (
     <div className="p-4">
         <BackButton/>
-        <div className="py-4 sm:px-3 text-center w-fit mx-auto select-none">
+        <div className="pt-4 sm:px-3 text-center w-fit mx-auto select-none">
             
             {loading ? <Loading /> :
             <div className="sm:p-4">
@@ -107,7 +110,7 @@ const ViewSet = () => {
 
                 <div className="p-4 flex justify-between items-center">
                 <div>
-                    <button className="p-2 border border-black text-[48px] rounded-[50%]" onClick={()=>{
+                    <button className="p-2 border border-black text-[48px] rounded-[50%] hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100" onClick={()=>{
                             card.current.classList.add("slideRight")
                             setTimeout(()=>{
                             setCardIndex(0);
@@ -117,7 +120,7 @@ const ViewSet = () => {
                             card.current.classList.remove("slideRight")
                             },slideDuration*1000)
                     }}><BsChevronDoubleLeft /></button>
-                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%]" onClick={()=>{
+                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%] hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100" onClick={()=>{
                         if (cardIndex > 0) {
                             card.current.classList.add("slideRight")
                             setTimeout(()=>{
@@ -132,7 +135,7 @@ const ViewSet = () => {
                 </div>
                 <h1 className="text-3xl">{`${cardIndex + 1}/${wordList.length}`}</h1>
                 <div>
-                    <button className="p-2 border border-black text-[48px] rounded-[50%]" onClick={()=>{
+                    <button className="p-2 border border-black text-[48px] rounded-[50%] hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100" onClick={()=>{
                         if (cardIndex < wordList.length - 1) {
                             card.current.classList.add("slideLeft")
                             setTimeout(()=>{
@@ -144,7 +147,7 @@ const ViewSet = () => {
                             },slideDuration*1000)
                         }
                         }}><GoChevronRight /></button>
-                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%]" onClick={()=>{
+                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%] hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100" onClick={()=>{
                             card.current.classList.add("slideLeft")
                             setTimeout(()=>{
                             setCardIndex(wordList.length - 1);
@@ -158,11 +161,33 @@ const ViewSet = () => {
                 </div>
 
                 <div className="p-4 flex justify-end items-center">
-                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%]" onClick={()=>{shuffle();}}><RxShuffle /></button>
+                    <button className="p-2 ml-2 border border-black text-[48px] rounded-[50%] hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100" onClick={()=>{shuffle();}}><RxShuffle /></button>
                 </div>
 
             </div>
             }
+        </div>
+        <div className="w-[50%] block mx-auto flex justify-center">
+
+            <Link to={`/writeSet/${setId}`}>
+                <button className="text-3xl border border-black rounded-xl px-4 pt-2 ml-2 w-fit hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100">
+                    <GoBook className="block mx-auto"/>
+                    <h1 className="text-lg">Learn</h1>
+                </button>
+            </Link>
+            <Link to={`/writeSet/${setId}`}>
+                <button className="text-3xl border border-black rounded-xl px-4 pt-2 ml-2 w-fit hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100">
+                    <FaPen className="block mx-auto"/>
+                    <h1 className="text-lg">Write</h1>
+                </button>
+            </Link>
+            <Link to={`/writeSet/${setId}`}>
+                <button className="text-3xl border border-black rounded-xl px-4 pt-2 ml-2 w-fit hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100">
+                    <IoNewspaperOutline className="block mx-auto"/>
+                    <h1 className="text-lg">Test</h1>
+                </button>
+            </Link>
+ 
         </div>
     </div>
   )

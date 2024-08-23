@@ -8,6 +8,7 @@ import ViewSet from './components/ViewSet.tsx';
 import Register from './components/Register.tsx';
 import Login from './components/Login.tsx';
 import Settings from './components/Settings.tsx';
+import WriteSet from './components/WriteSet.tsx';
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
       <Route path='/register' element={<Register />}></Route>
       <Route path='/login' element={<Login />}></Route>
       <Route path='/settings' element={<Settings />}></Route>
+      <Route path='/writeSet/:setId' element={<WriteSet />}></Route>
     </Routes>
   )
 }
