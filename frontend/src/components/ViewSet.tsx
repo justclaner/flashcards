@@ -1,5 +1,5 @@
 import {useState, useEffect, useRef} from 'react';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import axios from 'axios';
 import Loading from './Loading.tsx';
 import {url} from '../config.ts';

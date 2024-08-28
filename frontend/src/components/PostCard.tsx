@@ -1,7 +1,6 @@
 import {useState,useEffect, useContext, useRef, MutableRefObject} from 'react';
 import {DataCreateContext} from './CreateSet.tsx';
 import { FiMenu } from "react-icons/fi";
-import {Draggable} from '@shopify/draggable';
 
 interface Props {
     index: number;
@@ -16,10 +15,10 @@ const dataContext = useContext(DataCreateContext);
 const [cardId, setCardId] = useState(-1);
 
 useEffect(()=>{
-    handle.current.onmousedown = (e:any) => {
+    handle.current.onmousedown = (_e:any) => {
         card.current.setAttribute('draggable','true');
     }
-    handle.current.onmouseup = (e:any) => {
+    handle.current.onmouseup = (_e:any) => {
         card.current.setAttribute('draggable','false');
     }
     card.current.ondragend = (e:any) => {

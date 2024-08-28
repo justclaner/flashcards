@@ -15,10 +15,10 @@ const dataContext = useContext(DataEditContext);
 const [cardId, setCardId] = useState(-1);
 
 useEffect(()=>{
-    handle.current.onmousedown = (e:any) => {
+    handle.current.onmousedown = (_e:any) => {
         card.current.setAttribute('draggable','true');
     }
-    handle.current.onmouseup = (e:any) => {
+    handle.current.onmouseup = (_e:any) => {
         card.current.setAttribute('draggable','false');
     }
     card.current.ondragend = (e:any) => {

@@ -1,11 +1,11 @@
-import {useState, useEffect, useRef, MutableRefObject, LegacyRef} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useState, useEffect, useRef, MutableRefObject} from 'react';
+import { useParams} from 'react-router-dom';
 import axios from 'axios';
 import Loading from './Loading.tsx';
 import {url} from '../config.ts';
-import { GoChevronLeft, GoChevronRight } from "react-icons/go";
-import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
-import { RxShuffle } from "react-icons/rx";
+// import { GoChevronLeft, GoChevronRight } from "react-icons/go";
+// import { BsChevronDoubleLeft, BsChevronDoubleRight } from "react-icons/bs";
+// import { RxShuffle } from "react-icons/rx";
 import BackButton from './BackButton.tsx';
 import { FcCheckmark, FcCancel } from "react-icons/fc";
 
@@ -21,7 +21,7 @@ const WriteSet = () => {
     // const [currentCard,setCurrentCard] = useState(["",""])
     // const [showFront,setShowFront] = useState(true);
     const [cardIndex,setCardIndex] = useState(0);
-    const [wordOnFront, setWordOnFront] = useState(true);
+    const [wordOnFront, _setWordOnFront] = useState(true);
     const [correct, setCorrect] = useState(0);
     const [incorrect,setIncorrect] = useState(0);
     const textInput = useRef() as MutableRefObject<HTMLInputElement>
@@ -56,10 +56,10 @@ const WriteSet = () => {
     getData();
   },[])
 
-  useEffect(()=>{
-    console.log(newWordList);
-    console.log(newDefinitionList);
-  },[newWordList])
+//   useEffect(()=>{
+//     console.log(newWordList);
+//     console.log(newDefinitionList);
+//   },[newWordList])
 
   const checkAnswer = () => {
     setInFeedback(true);
