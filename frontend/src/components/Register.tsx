@@ -71,7 +71,7 @@ const Register = () => {
                 <button className="block mx-auto my-2 px-2 py-1 text-3xl rounded-xl border border-black hover:bg-gray-200 active:bg-gray-100"
                 onClick={()=>{postUser()}}
                 >Register</button>
-                <h1 className="text-sm text-center">Already made an account? <Link to='/login'><u><span className="text-sky-500 decoration-sky-500">Login here.</span></u></Link></h1>
+                <h1 className="text-sm text-center">Already made an account? <Link to='/'><u><span className="text-sky-500 decoration-sky-500">Login here.</span></u></Link></h1>
             </div>
         </div>
     </div>

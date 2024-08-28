@@ -43,7 +43,7 @@ useEffect(()=>{
         localStorage.removeItem("flashcardsAppUserId");
         localStorage.removeItem("flashcardsAppUsername");
         localStorage.removeItem("flashcardsAppAuthCode");
-        navigate('/login')
+        navigate('/')
        }}
        >Log Out</button>
         <h1 className="text-xl sm:text-3xl mb-3 text-center">Flashcards App</h1>

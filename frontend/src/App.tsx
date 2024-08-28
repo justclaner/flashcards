@@ -20,7 +20,7 @@ const App = () => {
       <Route path='/editSet/:setId' element={<EditSet />}></Route>
       <Route path='viewSet/:setId' element={<ViewSet />}></Route>
       <Route path='/register' element={<Register />}></Route>
-      <Route path='/login' element={<Login />}></Route>
+      <Route path='/' element={<Login />}></Route>
       <Route path='/settings' element={<Settings />}></Route>
       <Route path='/writeSet/:setId' element={<WriteSet />}></Route>
     </Routes>
