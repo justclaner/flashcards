@@ -1,1 +1,1 @@
-export const url = "https://flashcards-backend-eta.vercel.appflashcards";
+export const url = "https://flashcards-backend-eta.vercel.app/flashcards";
