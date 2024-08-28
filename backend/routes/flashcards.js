@@ -134,13 +134,15 @@ router.put('/editUser/:userId', async (req,res)=> {
 router.delete('/deleteUser/:userId', async (req,res)=> {
     try {
         const {userId} = req.params;
+        const user = await User.findById(userId);
+        console.log(user);
         const deleteUser = await User.findByIdAndDelete(userId);
         if (!deleteUser) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."});}
 
-        const deleteSets = await Set.deleteMany({owner:userId});
+        const deleteSets = await Set.deleteMany({owner:user.username});
         if (!deleteSets) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."});}
 
-        const deleteCards = await Card.deleteMany({owner:userId});
+        const deleteCards = await Card.deleteMany({owner:user.username});
         if (!deleteCards) {return res.status(500).json({success:false,message:"Something went wrong while accessing the MongoDB database."});}
 
         return res.status(200).json({success:true,message:"User and all related data successfully Deleted"});
