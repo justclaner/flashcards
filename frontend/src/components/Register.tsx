@@ -25,7 +25,8 @@ const Register = () => {
             username: username,
             password: password
         }
-        const response = await axios.post(`${url}/createUser`,userData)
+        const response = await axios.post(`${url}/createUser`,userData);
+        console.log(response);
         if (!response) {
             enqueueSnackbar("Something went wrong",{variant:"error"})
             return;

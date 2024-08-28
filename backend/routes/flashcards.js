@@ -294,16 +294,16 @@ router.delete('/deleteCard/:cardId', async (req,res) => {
 })
 
 //dangerous function
-// router.delete('/deleteAll',async (req,res) => {
-//     try {
-//         const deleteSets = await Set.deleteMany({});
-//         const deleteCards = await Card.deleteMany({});
-//         return res.status(200).json("Deleted everything successfully.")
-//     } catch(e) {
-//         console.error(e);
-//         return resizeBy.status(500).json({success:false,message:e.message});
-//     }
-// })
+router.delete('/deleteAll',async (req,res) => {
+    try {
+        const deleteSets = await Set.deleteMany({});
+        const deleteCards = await Card.deleteMany({});
+        return res.status(200).json("Deleted everything successfully.")
+    } catch(e) {
+        console.error(e);
+        return resizeBy.status(500).json({success:false,message:e.message});
+    }
+})
 
 export default router;
 
