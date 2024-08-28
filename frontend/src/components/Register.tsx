@@ -32,7 +32,7 @@ const Register = () => {
             enqueueSnackbar("Something went wrong",{variant:"error"})
             return;
         }
-        localStorage.setItem("flashcardsAppUserId",response.data.user[0]._id);
+        localStorage.setItem("flashcardsAppUserId",response.data.result._id);
         localStorage.setItem("flashcardsAppUsername",username);
         localStorage.setItem("flashcardsAppAuthCode",sha256(sha256(username)));
         navigate('/home');
