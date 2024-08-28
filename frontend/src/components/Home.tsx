@@ -30,6 +30,15 @@ useEffect(()=>{
     }
     getData();
 },[])
+
+const getLuma = (hex:string) : number => {
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    const luma = 0.299*r + 0.587*g + 0.114*b; //constant coefficients must add up to 1
+    return luma;
+}
+
   return (
     <div className="p-4 pb-[200px] w-full">
         <div className="flex justify-between items-center">
@@ -48,18 +57,25 @@ useEffect(()=>{
        >Log Out</button>
         <h1 className="text-xl sm:text-3xl mb-3 text-center">Flashcards App</h1>
         <div className="flex flex-wrap justify-evenly p-4 mx-auto my-2 border border-black w-[90%] rounded-lg min-w-[290px]">
+            
             {loading ? <Loading /> : sets.map(set=>{
                 //console.log(set.owner);
                 if (sha256(sha256(set.owner)) == localStorage.getItem("flashcardsAppAuthCode")) {
                     
-                return <div className="p-4 rounded-lg border border-black min-w-[250px] max-w-[24%] m-2" key={set._id} style={{backgroundColor:`${set.color}`}}>
+                const buttonTask = {
+                    borderColor:(getLuma(set.color) < 50) ? 'white' : 'black'
+                }
+                return <div className="p-4 rounded-lg border border-black min-w-[250px] max-w-[24%] m-2" key={set._id} 
+                style={{backgroundColor:`${set.color}`, color:(getLuma(set.color) < 50)? 'white' : 'black'}}>
                     <h1 className="text-2xl">{set.title}</h1>
                     <h1 className="text-xl">{set.description}</h1>
                     <h1 className="text-xl text-gray">{`${set.cardCount} terms`}</h1>
                     <div className="p-4 flex flex-wrap justify-evenly">
-                        <Link to={`/viewSet/${set._id}`}><button className="inline select-none border-2 border-black px-2 py-1 my-1 rounded-lg  hover:shadow-[0_5px_5px_-5px] ">Study Set</button></Link>
-                        <Link to={`/editSet/${set._id}`}><button className="inline select-none border-2 border-black px-2 py-1 my-1 ml-2 rounded-lg hover:shadow-[0_5px_5px_-5px] ">Edit Set</button></Link>
-                        <Link to={`/deleteSet/${set._id}`}><button className="inline select-none border-2 border-black px-2 py-1 my-1 ml-2 rounded-lg  hover:shadow-[0_5px_5px_-5px] ">Delete Set</button></Link>
+                        <Link to={`/viewSet/${set._id}`}><button style={buttonTask} className="inline select-none border-2 border-black px-2 py-1 my-1 rounded-lg  hover:shadow-[0_5px_5px_-5px] ">Study Set</button></Link>
+
+                        <Link to={`/editSet/${set._id}`}><button style={buttonTask} className="inline select-none border-2 border-black px-2 py-1 my-1 ml-2 rounded-lg hover:shadow-[0_5px_5px_-5px] ">Edit Set</button></Link>
+                        
+                        <Link to={`/deleteSet/${set._id}`}><button style={buttonTask} className="inline select-none border-2 border-black px-2 py-1 my-1 ml-2 rounded-lg  hover:shadow-[0_5px_5px_-5px] ">Delete Set</button></Link>
                     </div>
                 </div>
                 }

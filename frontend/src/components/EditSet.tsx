@@ -40,6 +40,11 @@ useEffect(()=>{
 },[definitionList])
 
 useEffect(()=>{
+  console.log(color);
+},[color])
+
+
+useEffect(()=>{
     const getData = async () => {
         try {
             setLoading(true);

@@ -28,7 +28,7 @@ router.post('/createUser', async (req,res)=> {
         const defaultSet = {
             title:"Sample Set",
             description: "This set was generated automatically.",
-            color:"white",
+            color:"#ffffff",
             cardCount:5,
             owner:createUser.username
         }
