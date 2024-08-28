@@ -296,6 +296,7 @@ router.delete('/deleteCard/:cardId', async (req,res) => {
 //dangerous function
 router.delete('/deleteAll',async (req,res) => {
     try {
+        const deleteUsers = await User.deleteMany({});
         const deleteSets = await Set.deleteMany({});
         const deleteCards = await Card.deleteMany({});
         return res.status(200).json("Deleted everything successfully.")

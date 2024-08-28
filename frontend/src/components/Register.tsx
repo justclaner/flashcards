@@ -21,6 +21,7 @@ const Register = () => {
   
   const postUser = async () => {
     try {
+        console.log("hello");
         const userData = {
             username: username,
             password: password
