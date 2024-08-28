@@ -16,7 +16,7 @@ const Settings = () => {
     const [newUsername, setNewUsername] = useState(username);
     useEffect(()=>{
         if(!authCode || sha256(sha256(username as any)) != authCode) {
-            navigate('/login');
+            navigate('/');
           }
     },[])
 
@@ -33,7 +33,7 @@ const Settings = () => {
             localStorage.removeItem("flashcardsAppUsername");
             localStorage.removeItem("flashcardsAppAuthCode");
             setLoading(false);
-            navigate('/login');
+            navigate('/');
         } catch(e:any) {
             setLoading(false);
             enqueueSnackbar(e.response.data.message,{variant: "error"})

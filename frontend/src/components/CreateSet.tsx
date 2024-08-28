@@ -173,7 +173,7 @@ const textareaPlaceholder = "Word 1\tDefinition 1\nWord 2\tDefinition 2\nWord 3\
   return (
     <div className="p-4 pb-[200px]">
       <SnackbarProvider transitionDuration={250} autoHideDuration={2000}/>
-      <div ref={importPage} className="absolute block bg-white asbsolute left-[-1px] right-[-1px] top-0 p-4 z-10 border border-black rounded-x h-fit"
+      <div ref={importPage} className="absolute block bg-white left-[-1px] right-[-1px] top-0 p-4 z-10 border border-black rounded-x h-fit"
       style={{
         translate: isImporting ? "0 0" : "0 -100%",
         transition: "0.25s"

@@ -15,7 +15,7 @@ const username = localStorage.getItem("flashcardsAppUsername");
 
 useEffect(()=>{
     if(!localStorage.getItem("flashcardsAppAuthCode")) {
-        navigate('/login')
+        navigate('/')
     }
     const getData = async () => {
         try {
@@ -74,7 +74,7 @@ const getLuma = (hex:string) : number => {
                         <Link to={`/viewSet/${set._id}`}><button style={buttonTask} className="inline select-none border-2 border-black px-2 py-1 my-1 rounded-lg  hover:shadow-[0_5px_5px_-5px] ">Study Set</button></Link>
 
                         <Link to={`/editSet/${set._id}`}><button style={buttonTask} className="inline select-none border-2 border-black px-2 py-1 my-1 ml-2 rounded-lg hover:shadow-[0_5px_5px_-5px] ">Edit Set</button></Link>
-                        
+
                         <Link to={`/deleteSet/${set._id}`}><button style={buttonTask} className="inline select-none border-2 border-black px-2 py-1 my-1 ml-2 rounded-lg  hover:shadow-[0_5px_5px_-5px] ">Delete Set</button></Link>
                     </div>
                 </div>

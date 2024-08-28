@@ -1,5 +1,5 @@
 import {useState, useEffect, useRef, MutableRefObject} from 'react';
-import { useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import axios from 'axios';
 import Loading from './Loading.tsx';
 import {url} from '../config.ts';
@@ -8,6 +8,7 @@ import {url} from '../config.ts';
 // import { RxShuffle } from "react-icons/rx";
 import BackButton from './BackButton.tsx';
 import { FcCheckmark, FcCancel } from "react-icons/fc";
+import { FaGear } from 'react-icons/fa6';
 
 const WriteSet = () => {
     const {setId} = useParams();
@@ -16,15 +17,21 @@ const WriteSet = () => {
     const [loading,setLoading] = useState(false);
     const [wordList,setWordList] = useState<string[]>([]);
     const [definitionList,setDefinitionList] = useState<string[]>([]);
+    const [wordCount, setWordCount] = useState(0);
     const [userInput, setUserInput] = useState("");
     const [inFeedback, setInFeedback] = useState(false);
     // const [currentCard,setCurrentCard] = useState(["",""])
     // const [showFront,setShowFront] = useState(true);
     const [cardIndex,setCardIndex] = useState(0);
-    const [wordOnFront, _setWordOnFront] = useState(true);
+    const [wordOnFront, setWordOnFront] = useState(true);
     const [correct, setCorrect] = useState(0);
+    const [totalCorrect, setTotalCorrect] = useState(0);
     const [incorrect,setIncorrect] = useState(0);
-    const textInput = useRef() as MutableRefObject<HTMLInputElement>
+    const [percentages, setPercentages] = useState<number[]>([]);
+    const [completed, setCompleted] = useState(false);
+    const [inSettings, setInSettings] = useState(false);
+    //const textInput = useRef() as MutableRefObject<HTMLInputElement>
+    const textInput = useRef() as MutableRefObject<HTMLTextAreaElement>
     const correctSign = useRef() as MutableRefObject<HTMLDivElement>
     const incorrectSign = useRef() as MutableRefObject<HTMLDivElement>
     const restartMessage = useRef(document.createElement("h1"))
@@ -47,6 +54,7 @@ const WriteSet = () => {
             setDefinitionList(response.data.cards.map((card: { definition: string; })=>{
                 return card.definition;
             }))
+            setWordCount(response.data.set.cardCount);
             setLoading(false);
         } catch(e) {
             setLoading(false);
@@ -54,12 +62,26 @@ const WriteSet = () => {
         }
     }
     getData();
+    resizeTextArea();
   },[])
 
 //   useEffect(()=>{
 //     console.log(newWordList);
 //     console.log(newDefinitionList);
 //   },[newWordList])
+
+useEffect(()=>{
+    resizeTextArea();
+},[userInput])
+
+useEffect(()=>{
+console.log(percentages);
+},[percentages])
+
+const resizeTextArea = () => {
+    textInput.current.style.height = "1px";
+    textInput.current.style.height = (textInput.current.scrollHeight) + "px";
+}
 
   const checkAnswer = () => {
     setInFeedback(true);
@@ -80,6 +102,7 @@ const WriteSet = () => {
         setNewWordList([...newWordList,wordList[cardIndex]]);
         setNewDefinitionList([...newDefinitionList,definitionList[cardIndex]]);
         textInput.current.value = wordOnFront ? definitionList[cardIndex] : wordList[cardIndex];
+        resizeTextArea();
     }
     setTimeout(()=>{
         sign.current.style.visibility = "hidden";
@@ -89,7 +112,13 @@ const WriteSet = () => {
 
         setInFeedback(false);
         textInput.current.style.color = "black";
+        //states not updated yet
         if (cardIndex == wordList.length - 1) {
+            if (sign == correctSign && incorrect == 0) {
+                setCompleted(true);
+                setPercentages([...percentages,1]);
+            } 
+            else {
             textInput.current.readOnly = true;
             restartMessage.current.style.visibility = "visible";
             restartMessage.current.textContent += ".";
@@ -107,9 +136,14 @@ const WriteSet = () => {
                 clearInterval(addDots);
                 restartMessage.current.textContent = defaultRestartMessageTextContent;
                 textInput.current.readOnly = false;
+                
+                setTotalCorrect((sign == correctSign) ? correct + 1 : correct);
+                setTotalCorrect(correct);
+                setPercentages([...percentages,(sign == correctSign) ? (totalCorrect+correct+1)/wordCount : (totalCorrect+correct)/wordCount]);
                 setCorrect(0);
                 setIncorrect(0);
             },restartMessageDurationSeconds*1000)
+        }
         } else {
         setCardIndex(cardIndex + 1);
         }
@@ -117,25 +151,62 @@ const WriteSet = () => {
     },seconds*1000)
   }
 
+
   return (
     <div className="p-4">
-        <BackButton path={`/viewSet/${setId}`}/>
+        <div className="absolute block bg-white left-0 right-0 top-0 bottom-0 p-4 z-10 border border-black flex flex-col justify-center items-center z-1"
+        style={{
+            translate: completed ? "0 0" : "0 -100%",
+            transition: "0.25s"
+        }}>
+            <h1 className="text-3xl">Good job!</h1>
+            <div className="flex">
+                {percentages.map((p,i) => 
+                <div className='mx-2 text-center' key={`score-${i}`}>
+                    <div className="text-xl">{`Attempt ${i+1}`}</div>
+                    <div className="text-lg">{`${(p*100).toFixed(2)}%`}</div>
+                </div>
+                )}
+        </div>
+    
+
+            <Link to={'/home'}><button  className="inline select-none border-2 border-black px-2 py-1 my-1 ml-2 rounded-lg hover:shadow-[0_5px_5px_-5px] ">Back to Home</button></Link>
+        </div>
+        <div className="absolute block bg-white left-0 top-0 h-fit w-fit p-4 z-10 border border-black z-2 flex justify-center items-center"
+        style={{
+            translate: inSettings ? "0 0" : "0 -100%",
+            transition: "0.25s"
+        }}
+        >
+        <button className="block mx-auto inline select-none border-2 border-black px-2 py-1 my-1 rounded-lg hover:shadow-[0_5px_5px_-5px]"
+        onClick={()=>{setWordOnFront(!wordOnFront)}}>
+            {`Set word on ${wordOnFront ? "back" : "front"}`}
+            </button>
+        </div>
+        <div className="flex justify-between items-center">
+            <BackButton path={`/viewSet/${setId}`}/>
+            <button 
+            onClick={()=>{
+                setInSettings(!inSettings);
+            }}>
+                <FaGear className="text-[48px] text-slate-500 duration-500 hover:rotate-180 hover:text-slate-300 active:text-slate-400"/>
+            </button>
+        </div>
         {loading ? <Loading /> :
         <div className="sm:p-4">
             <div className="text-left w-[60%] mx-auto">
                     <h1 className="text-[48px]">{title}</h1>
                     <h1 className="text-2xl">{description}</h1>
             </div>
-            <div className="p-4 border border-black w-[60%] mx-auto">
-                <h1 className="text-3xl">{wordList[cardIndex]}</h1>
-                <div className="flex justify-between items-center">
-                    <h1 className="text-lg">Write the definition:</h1>
+            <div className="p-4 border border-black w-[90%] sm:w-[60%] mx-auto">
+                <h1 className="text-3xl">{wordOnFront ? definitionList[cardIndex] : wordList[cardIndex]}</h1>
+                <div className="flex justify-end items-center">
                     <div className='flex'>
                         <div style={{visibility:"hidden"}} ref={incorrectSign}><FcCancel className="text-[48px]" /></div>
                         <div style={{visibility:"hidden"}} ref={correctSign}><FcCheckmark className="text-[48px]" /></div>
                     </div>
                 </div>
-                <input type="text" className='text-3xl w-full border border-black px-2 py-1' 
+                <textarea className='text-xl w-full border border-black rounded-lg px-2 py-1 w-fit overflow-hidden resize-none min-h-[40px] h-[40px]' 
                 placeholder={wordOnFront ? "Write the definition" : "Write the word"} 
                 onChange={(e)=>{setUserInput(e.target.value)}}
                 onKeyDown={(e)=>{
