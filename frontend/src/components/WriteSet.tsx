@@ -199,7 +199,7 @@ const resizeTextArea = () => {
                     <h1 className="text-2xl">{description}</h1>
             </div>
             <div className="p-4 border border-black w-[90%] sm:w-[60%] mx-auto">
-                <h1 className="text-3xl">{wordOnFront ? definitionList[cardIndex] : wordList[cardIndex]}</h1>
+                <h1 className="text-3xl">{wordOnFront ? wordList[cardIndex] : definitionList[cardIndex]}</h1>
                 <div className="flex justify-end items-center">
                     <div className='flex'>
                         <div style={{visibility:"hidden"}} ref={incorrectSign}><FcCancel className="text-[48px]" /></div>
