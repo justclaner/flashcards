@@ -1,7 +1,7 @@
 const WorkInProgress = () => {
   return (
-    <div className="text-[72px] flex justify-center items-center">
-        This page or function is a work in progres. Please check back later.
+    <div className="p-4 flex justify-center items-center">
+        <h1 className="text-[48px]">This page or function is a work in progres. Please check back later.</h1>
     </div>
   )
 }
