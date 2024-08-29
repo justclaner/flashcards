@@ -169,7 +169,7 @@ const ViewSet = () => {
         </div>
         <div className="w-[50%] block mx-auto flex justify-center">
 
-            <Link to={`/writeSet/${setId}`}>
+            <Link to={`/wip`}>
                 <button className="text-3xl border border-black rounded-xl px-4 pt-2 ml-2 w-fit hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100">
                     <GoBook className="block mx-auto"/>
                     <h1 className="text-lg">Learn</h1>
@@ -181,7 +181,7 @@ const ViewSet = () => {
                     <h1 className="text-lg">Write</h1>
                 </button>
             </Link>
-            <Link to={`/writeSet/${setId}`}>
+            <Link to={`/wip`}>
                 <button className="text-3xl border border-black rounded-xl px-4 pt-2 ml-2 w-fit hover:shadow-[0_5px_5px_-5px] hover:bg-gray-200 active:bg-gray-100">
                     <IoNewspaperOutline className="block mx-auto"/>
                     <h1 className="text-lg">Test</h1>

@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import {sha256} from 'js-sha256';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import {url} from '../config.ts';
 import BackButton from './BackButton.tsx';
@@ -53,7 +53,7 @@ const Settings = () => {
                         />
                 </div>
                 <div className="flex justify-end items-center py-2">
-                    <button className="border border-black ml-2 px-2 py-1 text-xl rounded-xl hover:bg-gray-200 active:bg-gray-100">Change Password</button>
+                    <Link to='/wip'><button className="border border-black ml-2 px-2 py-1 text-xl rounded-xl hover:bg-gray-200 active:bg-gray-100">Change Password</button></Link>
                 </div>
                 <button className="border border-black mx-auto block text-xl rounded-xl px-2 py-1 hover:bg-gray-200 active:bg-gray-100" onClick={()=>{putUsername()}}>Save</button>
             </div>
