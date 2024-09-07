@@ -12,7 +12,9 @@ const [loading, setLoading] = useState(false);
 const navigate = useNavigate();
 const username = localStorage.getItem("flashcardsAppUsername");
 
-
+useEffect(()=>{
+    console.log(sets);
+},[sets])
 useEffect(()=>{
     if(!localStorage.getItem("flashcardsAppAuthCode")) {
         navigate('/')
@@ -20,6 +22,8 @@ useEffect(()=>{
     const getData = async () => {
         try {
             setLoading(true);
+            //repaste ${url} back later
+            //http://localhost:5000/flashcards for testing
             const response = await axios.get(`${url}`);
             setSets(response.data.sets);
             setLoading(false);

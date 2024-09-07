@@ -169,6 +169,7 @@ router.get('/:setId?/:cardId?',async (req,res)=>{
     );}
     return res.status(200).json(
         {
+            //use .sort([['_id',-1]])
             sets: await Set.find({}),
             cards: await Card.find({})
         }
