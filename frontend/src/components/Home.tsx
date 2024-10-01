@@ -62,7 +62,7 @@ useEffect(()=>{
         try {
             if (!isDragging && !moveIds.includes("-1")) {
                 setLoading(true);
-                await axios.put(`${url}/${moveIds[0]}/${moveIds[1]}`);
+                await axios.put(`${url}/dragSet/${moveIds[0]}/${moveIds[1]}`);
                 setLoading(false);
                 location.reload();
             }
