@@ -135,7 +135,8 @@ const postFlashcards = async () => {
       cardCount: cardElements.length,
       owner: owner
     }
-    const set = await axios.post(`${url}/createSet`, setData);
+    //replace with ${url}
+    const set = await axios.post(`${url}`, setData);
     const setId = set.data.result._id;
     //create all cards to be linked to the set
     for (let i = 0; i < wordList.length; i++) {

@@ -10,6 +10,7 @@ const hash = (string) => {
     return crypto.hash('sha256',string);
 }
 
+
 router.post('/createUser', async (req,res)=> {
     try {
         const {username,password} = req.body;
@@ -170,7 +171,7 @@ router.get('/:setId?/:cardId?',async (req,res)=>{
     return res.status(200).json(
         {
             //use .sort([['_id',-1]])
-            sets: await Set.find({}),
+            sets: await Set.find({}).sort([['index',-1]]),
             cards: await Card.find({})
         }
     )
@@ -184,10 +185,14 @@ router.post('/createSet', async (req,res)=>{
     try {
         const {title, description, color, cardCount, owner} = req.body;
         if (!title) {return res.status(400).json({success:false,message:"Title not provided."})}
+        const existingSets = await Set.find({owner:owner});
+        console.log(owner);
+        console.log(existingSets.length);
         const set = {
             title:title,
             cardCount:cardCount,
-            owner: owner
+            owner: owner,
+            index: existingSets.length
         };
         if (description) {set.description = description;}
         if (color) {set.color = color;}
@@ -239,6 +244,38 @@ router.put('/editSet/:setId', async (req,res) => {
     }
 })
 
+router.put('/dragSet/:setId1/:setId2', async (req,res) => {
+    try {
+        const {setId1,setId2} = req.params;
+            const set1 = await Set.findById(setId1);
+            const set2 = await Set.findById(setId2);
+
+            if (set1.index < set2.index) {
+            const middleSets = await Set.find({index:{$gt:set1.index, $lt:set2.index}});
+            const afterSets = await Set.find({index:{$gt: set2.index}});
+
+            for (let i = 0; i < middleSets.length; i++) {
+                await Set.findByIdAndUpdate(middleSets[i]._id,{index: middleSets[i].index - 1});
+            }
+            await Set.findByIdAndUpdate(setId1, {index: set2.index});
+            await Set.findByIdAndUpdate(setId2, {index: set2.index - 1});
+           // const sets = await Set.find({'._id':{$gt: setId2}});
+            //console.log(sets);
+            } else if (set1.index > set2.index) {
+                const middleSets = await Set.find({index:{$gt: set2.index, $lt: set1.index}});
+                for (let i = 0; i < middleSets.length; i++) {
+                    await Set.findByIdAndUpdate(middleSets[i]._id,{index: middleSets[i].index + 1})
+                }
+                await Set.findByIdAndUpdate(setId1, {index: set2.index + 1});
+            }
+       // const result = await Set.findByIdAndUpdate(set)
+       return res.status(200).json({success:true,message:"Set drag done successfully"});
+    } catch(e) {
+        console.error(e);
+        return res.status(500).json({success:false,message:e.message});
+    }
+})
+
 router.put('/editCard/:cardId', async (req,res) => {
     try {
         const {cardId} = req.params;
@@ -257,9 +294,16 @@ router.put('/editCard/:cardId', async (req,res) => {
 router.delete('/deleteSet/:setId', async (req,res) => {
     try {
         const {setId} = req.params;
+        const set = await Set.findById(setId);
+        if (!set) {return res.status(404).json({success:false, message:"Set is not found."});}
 
-        const deleteSet = await Set.findByIdAndDelete(setId);
-        if (!deleteSet) {return res.status(404).json({success:false, message:"Set is not found."});}
+        const sets = await Set.find({index:{$gt: set.index}});
+        for (let i = 0; i < sets.length; i++) {
+            await Set.findByIdAndUpdate(sets[i]._id,{index:sets[i].index - 1});
+        }
+
+        // const deleteSet = await Set.findByIdAndDelete(setId);
+        // if (!deleteSet) {return res.status(404).json({success:false, message:"Set is not found."});}
 
         const deleteCards = await Card.deleteMany({setId:setId});
         if (!deleteCards) {return res.status(404).json({success:false,message:"Cards not found."});}

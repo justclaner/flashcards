@@ -21,6 +21,10 @@ const setSchema = mongoose.Schema(
         owner: {
             type: String,
             required: true
+        },
+        index: {
+            type: Number,
+            required: true
         }
     },
     {

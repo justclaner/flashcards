@@ -1,6 +1,6 @@
 const allowCors = (req, res, next) => {
     res.header('Access-Control-Allow-Credentials', true)
-    res.header('Access-Control-Allow-Origin', '*') //change this
+    res.header('Access-Control-Allow-Origin', 'https://flashcards-seven-nu.vercel.app') //change this
     //'https://flashcards-seven-nu.vercel.app' when not testing in localhost
     res.header('Access-Control-Allow-Methods', 'GET,PATCH,DELETE,POST,PUT,OPTIONS')
     res.header(

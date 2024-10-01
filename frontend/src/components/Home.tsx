@@ -9,6 +9,8 @@ import { FaGear } from "react-icons/fa6";
 const Home = () => {
 const [sets, setSets] = useState<any[]>([]);
 const [loading, setLoading] = useState(false);
+const [moveIds,setMoveIds] = useState(["-1","-1"]);
+const [isDragging,setIsDragging] = useState(false);
 const navigate = useNavigate();
 const username = localStorage.getItem("flashcardsAppUsername");
 
@@ -24,6 +26,7 @@ useEffect(()=>{
             setLoading(true);
             //repaste ${url} back later
             //http://localhost:5000/flashcards for testing
+            //replace with ${url} later
             const response = await axios.get(`${url}`);
             setSets(response.data.sets);
             setLoading(false);
@@ -42,6 +45,33 @@ const getLuma = (hex:string) : number => {
     const luma = 0.299*r + 0.587*g + 0.114*b; //constant coefficients must add up to 1
     return luma;
 }
+
+// const moveElements = (arr: any[]): any[] => {
+//     const elem = arr[moveIds[0]];
+//     const newList1 = arr.filter((_obj:any,i:number)=>i != moveIds[0]);
+//     const newList2 = [
+//       ...newList1.slice(0,moveIds[1]),
+//       elem,
+//       ...newList1.slice(moveIds[1])
+//     ];
+//     return newList2;
+//   }
+
+useEffect(()=>{
+    const dragSets = async () => {
+        try {
+            if (!isDragging && !moveIds.includes("-1")) {
+                setLoading(true);
+                await axios.put(`${url}/${moveIds[0]}/${moveIds[1]}`);
+                setLoading(false);
+                location.reload();
+            }
+        } catch(e:any) {
+            setLoading(false);
+        }
+    }
+    dragSets();
+}, [moveIds])
 
   return (
     <div className="p-4 pb-[200px] w-full">
@@ -70,7 +100,19 @@ const getLuma = (hex:string) : number => {
                     borderColor:(getLuma(set.color) < 50) ? 'white' : 'black'
                 }
                 return <div className="p-4 rounded-lg border border-black min-w-[250px] max-w-[24%] m-2" key={set._id} 
-                style={{backgroundColor:`${set.color}`, color:(getLuma(set.color) < 50)? 'white' : 'black'}}>
+                style={{backgroundColor:`${set.color}`, color:(getLuma(set.color) < 50)? 'white' : 'black'}}
+                draggable={true}
+                onDrag={()=>{
+                    setMoveIds([set._id,moveIds[1]]);
+                    setIsDragging(true);
+                }}
+                onDragOver={(e)=>{e.preventDefault();}}
+                onDragEnter={(e)=>{e.preventDefault();}}
+                onDrop={()=>{
+                    setMoveIds([moveIds[0],set._id]);
+                    setIsDragging(false);
+                }}
+                >
                     <h1 className="text-2xl">{set.title}</h1>
                     <h1 className="text-xl">{set.description}</h1>
                     <h1 className="text-xl text-gray">{`${set.cardCount} terms`}</h1>
