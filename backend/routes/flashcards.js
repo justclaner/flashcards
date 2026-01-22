@@ -31,7 +31,8 @@ router.post('/createUser', async (req,res)=> {
             description: "This set was generated automatically.",
             color:"#ffffff",
             cardCount:5,
-            owner:createUser.username
+            owner:createUser.username,
+            index: 0
         }
         const createDefaultSet = await Set.create(defaultSet);
 
