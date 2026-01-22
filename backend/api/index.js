@@ -9,13 +9,13 @@ const app = express();
 const port = process.env.PORT;
 const uri = process.env.MONGO_URI;
 
+app.use(cors({
+  origin: 'https://flashcards-seven-nu.vercel.app',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
+}));
 app.use(express.json());
-// app.use(cors({
-//     origin: '*',
-//     methods: '*',
-//     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'],
-//     credentials: true,
-//   }));
 app.use(auth);
 app.use('/flashcards',flashcardsRouter)
 
